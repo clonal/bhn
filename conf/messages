@@ -1,0 +1,31 @@
+sign.up.email.sent = 我们发送了一封激活邮件到 {0}. 请按照邮件内容激活账号，如果没有找到邮件，请记得查看邮箱的其他收件箱，或者再次登录重新发送激活邮件。
+
+email.sign.up.subject = 欢迎注册
+email.sign.up.hello = 你好，{0}
+email.sign.up.html.text = 请点击<a href="{0}">这里</a>来激活您的账号
+email.sign.up.txt.text = 请点击下方链接激活您的账号: {0}
+
+email.already.signed.up.subject = 欢迎注册
+email.already.signed.up.hello = 你好, {0}
+email.already.signed.up.html.text = 你已经注册了账户，请点击<a href="{0}">这里</a>登录
+email.already.signed.up.txt.text = 你已经注册了账户，请点击下方链接登录: {0}
+
+email.activate.account.subject = 激活账号
+email.activate.account.hello = 你好，{0}
+email.activate.account.html.text = 请点击<a href="{0}">这里</a>来激活您的账号
+email.activate.account.txt.text = 请点击下方链接激活您的账号: {0}
+
+email.from = amzShop <clonal@163.com>
+
+password.changed = 密码修改完毕
+current.password.invalid = 当前密码不正确
+
+reset.email.sent = 重设密码邮件已发送
+email.reset.password.subject = 重设密码
+email.reset.password.hello = 你好 {0},
+email.reset.password.html.text = 请点击<a href="{0}">这里</a>来重设你的密码
+email.reset.password.txt.text = 请点击下方链接重设你的密码: {0}
+reset.email.notFound = 改用户不存在
+
+password.reset = 重设密码成功
+invalid.reset.link = 无效的链接

@@ -1,0 +1,42 @@
+<div class="main" *ngIf="menu$ | async as menu">
+    <div>
+        父级节点
+        <select [(ngModel)]="menu.parent">
+            <option value={{aboutUsMenu}}>关于我们</option>
+            <!--<option *ngFor="let menu of aboutService.menus" value={{menu.id}}>{{menu.name}}</option>-->
+        </select>
+    </div>
+
+    <div>
+        栏目名称
+        <input [(ngModel)]="menu.name" type="text" />
+    </div>
+
+    <div>
+        简要描述
+        <textarea [(ngModel)]="menu.desc"></textarea>
+    </div>
+
+    <div>
+        BANNER展示图
+        <div *ngIf="menu.banner['1']">
+            <img src='{{"../images/" + menu.banner["1"]}}' width="200" height="50" />
+        </div>
+        <input type="file" ng2FileSelect [uploader]="uploader" />
+    </div>
+
+
+    <div>
+        内容
+        <textarea [(ngModel)]="menu.content"></textarea>
+    </div>
+
+    <div *ngIf="selectedMenu; else editBlock">
+        <button (click)="edit(menu)">编辑</button>
+    </div>
+    <ng-template #editBlock>
+        <div>
+            <button (click)="submit(menu)">提交</button>
+        </div>
+    </ng-template>
+</div>

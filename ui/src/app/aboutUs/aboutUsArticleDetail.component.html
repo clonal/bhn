@@ -1,0 +1,34 @@
+<div class="main" *ngIf="article$ | async as _article">
+
+    <div>
+        栏目选择
+        <select [(ngModel)]="_article.menu">
+            <option value=2>关于我们</option>
+        </select>
+    </div>
+
+    <div>
+        文章标题
+        <input type="text" [(ngModel)]="_article.title"/>
+    </div>
+
+    <div>
+        简要描述
+        <textarea [(ngModel)]="_article.desc"></textarea>
+    </div>
+
+    <div>
+        内容
+        <textarea [(ngModel)]="_article.content"></textarea>
+    </div>
+
+    <div *ngIf="selectedArticle; else editBlock">
+        <button (click)="edit(_article)">编辑</button>
+    </div>
+    <ng-template #editBlock>
+        <div>
+            <button (click)="submit(_article)">提交</button>
+        </div>
+    </ng-template>
+</div>
+

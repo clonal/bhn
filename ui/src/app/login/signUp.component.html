@@ -1,0 +1,33 @@
+<h2>
+    欢迎注册！
+</h2>
+<div>
+    <form #loginForm="ngForm">
+        <div>
+            <label>用户名:</label>
+            <input type="text" name="name" id="name"
+                   required minlength="4"
+                   [(ngModel)]="name">
+        </div>
+        <div>
+            <label>邮箱:</label>
+            <input type="email" name="email" id="email"
+                   required minlength="4"
+                   [(ngModel)]="email">
+        </div>
+        <div>
+            <label>密码:</label>
+            <input type="password" name="password" id="password"
+                   required minlength="4"
+                   [(ngModel)]="password">
+        </div>
+        <div>
+            <input type="hidden" name="role" id="role" value="1" [(ngModel)]="role">
+        </div>
+        <div>
+            <input type="submit" value="注册"
+                   [disabled]="!loginForm.valid || loginForm.prestine"
+                   (click)="onSignUp()">
+        </div>
+    </form>
+</div>

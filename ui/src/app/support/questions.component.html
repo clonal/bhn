@@ -1,0 +1,9 @@
+<div class="main">
+    <ul *ngFor="let child of supportService.questions">
+        <li><a [routerLink]="['/support/question', child.id]">{{child.question}}</a>
+            <span><button (click)="deleteQuestion(child.id)" >删除</button>
+                &nbsp;&nbsp;<button [routerLink]="['/support/question', child.id]" >编辑</button>
+            </span>
+        </li>
+    </ul>
+</div>

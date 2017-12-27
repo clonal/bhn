@@ -1,0 +1,27 @@
+<div class="main">
+    <div>选择语言
+        <select>
+            <option selected value="US">US</option>
+            <option value="JP">JP</option>
+            <option value="DE">DE</option>
+            <option value="ES">ES</option>
+            <option value="IT">IT</option>
+        </select>
+    </div>
+    <div>全站搜索
+        <input type="text" />
+    </div>
+    <div>首页BANNER展示图
+        <div>
+            <li *ngFor="let link of banners">
+                <img src='{{"../images/" + link.src}}' width="200" height="50" />
+                <button (click)="deleteImage(link.order)">删除</button>
+                修改: <input type="file" ng2FileSelect [uploader]="uploader" />
+                <button>排序</button>
+            </li>
+
+        </div>
+        <upload-image [menu]="selectedMenu"></upload-image>
+    </div>
+</div>
+

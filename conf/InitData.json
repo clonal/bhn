@@ -1,0 +1,437 @@
+[
+  {
+    "collection": "menu",
+    "data": [
+      {
+        "id": 1,
+        "name": "root",
+        "parent": 0,
+        "banner": {"1": "222"},
+        "desc": "后台中心",
+        "content": "",
+        "order": 1,
+        "required": true
+      },
+      {
+        "id": 2,
+        "name": "aboutUs",
+        "parent": 1,
+        "banner": {},
+        "desc": "关于我们",
+        "content": "",
+        "order": 1,
+        "required": true
+      },
+      {
+        "id": 3,
+        "name": "productManager",
+        "parent": 1,
+        "banner": {},
+        "desc": "产品中心",
+        "content": "",
+        "order": 2,
+        "required": true
+      },
+      {
+        "id": 4,
+        "name": "addProduct",
+        "parent": 3,
+        "banner": {},
+        "desc": "添加产品",
+        "content": "",
+        "order": 1,
+        "required": true
+      },
+      {
+        "id": 5,
+        "name": "addCategory",
+        "parent": 3,
+        "banner": {},
+        "desc": "添加分类",
+        "content": "",
+        "order": 2,
+        "required": true
+      },
+      {
+        "id": 6,
+        "name": "categoryList",
+        "parent": 3,
+        "banner": {},
+        "desc": "分类列表",
+        "content": "",
+        "order": 3,
+        "required": true
+      },
+      {
+        "id": 7,
+        "name": "comments",
+        "parent": 3,
+        "banner": {},
+        "desc": "产品评论",
+        "content": "",
+        "order": 4,
+        "required": true
+      },
+      {
+        "id": 8,
+        "name": "support",
+        "parent": 1,
+        "banner": {},
+        "desc": "服务支持",
+        "content": "",
+        "order": 3,
+        "required": true
+      },
+      {
+        "id": 9,
+        "name": "profile",
+        "parent": 2,
+        "banner": {},
+        "desc": "公司简介",
+        "content": "",
+        "order": 1,
+        "required": true
+      },
+      {
+        "id": 10,
+        "name": "contact",
+        "parent": 2,
+        "banner": {},
+        "desc": "联系我们",
+        "content": "",
+        "order": 2,
+        "required": true
+      },
+      {
+        "id": 11,
+        "name": "question",
+        "parent": 8,
+        "banner": {},
+        "desc": "常见问题",
+        "content": "",
+        "order": 1,
+        "required": true
+      },
+      {
+        "id": 12,
+        "name": "feedback",
+        "parent": 8,
+        "banner": {},
+        "desc": "信息反馈",
+        "content": "",
+        "order": 2,
+        "required": true
+      }
+    ]
+  },
+  {
+    "collection": "article",
+    "data": [
+      {
+        "id": 1,
+        "menu": 2,
+        "title": "公司介绍",
+        "desc": "公司介绍",
+        "content": "公司介绍",
+        "order": 1,
+        "date": "2017-10-19 01:00:00"
+      },
+      {
+        "id": 2,
+        "menu": 2,
+        "title": "联系我们",
+        "desc": "联系我们",
+        "content": "联系我们",
+        "order": 2,
+        "date": "2017-10-19 01:00:00"
+      },
+      {
+        "id": 3,
+        "menu": 2,
+        "title": "公司新闻",
+        "desc": "公司新闻",
+        "content": "公司新闻",
+        "order": 3,
+        "date": "2017-10-19 01:00:00"
+      },
+      {
+        "id": 4,
+        "menu": 2,
+        "title": "企业文化",
+        "desc": "企业文化",
+        "content": "企业文化",
+        "order": 4,
+        "date": "2017-10-19 01:00:00"
+      },
+      {
+        "id": 5,
+        "menu": 2,
+        "title": "品牌介绍",
+        "desc": "品牌介绍",
+        "content": "品牌介绍",
+        "order": 5,
+        "date": "2017-10-19 01:00:00"
+      }
+    ]
+  },
+  {
+    "collection": "category",
+    "data": [
+      {
+        "id": 1,
+        "name": "电脑",
+        "desc": "电脑",
+        "parent": 0,
+        "banner" : ""
+      },
+      {
+        "id": 2,
+        "name": "平板电脑配件",
+        "desc": "平板电脑配件",
+        "parent": 1,
+        "banner" : ""
+      },
+      {
+        "id": 3,
+        "name": "外设产品",
+        "desc": "外设产品",
+        "parent": 1,
+        "banner" : ""
+      },
+      {
+        "id": 4,
+        "name": "运动户外",
+        "desc": "运动户外",
+        "parent": 0,
+        "banner" : ""
+      },
+      {
+        "id": 5,
+        "name": "腰包",
+        "desc": "腰包",
+        "parent": 4,
+        "banner" : ""
+      },
+      {
+        "id": 6,
+        "name": "臂带",
+        "desc": "臂带",
+        "parent": 4,
+        "banner" : ""
+      }
+    ]
+  },
+  {
+    "collection": "product",
+    "data": [
+      {
+        "id": 1,
+        "name": "IPad保护壳",
+        "desc": "IPad保护壳",
+        "category": [1, 3],
+        "sku": [1, 2],
+        "amazonLink": ""
+      },
+      {
+        "id": 2,
+        "name": "IPad支架",
+        "desc": "IPad支架",
+        "category": [1, 3],
+        "sku": [3],
+        "amazonLink": ""
+      },
+      {
+        "id": 3,
+        "name": "运动腰包",
+        "desc": "运动腰包",
+        "category": [4, 5],
+        "sku": [4, 5],
+        "amazonLink": ""
+      },
+      {
+        "id": 4,
+        "name": "运动臂带",
+        "desc": "运动臂带",
+        "category": [4, 6],
+        "sku": [6],
+        "amazonLink": ""
+      }
+    ]
+  },
+  {
+    "collection": "sku",
+    "data": [
+      {
+        "id": 1,
+        "product": 1,
+        "name": "红色10.5寸IPad保护壳",
+        "attributes": [
+          {
+            "key": "color",
+            "value": "red"
+          },
+          {
+            "key": "size",
+            "value": "10.5 inch"
+          }
+        ],
+        "content": "红色10.5寸IPad保护壳",
+        "price": 29.9,
+        "sellPrice": 19.9,
+        "asin": "a1",
+        "stock": 99,
+        "show": 1,
+        "images": {"1": ""}
+      },
+      {
+        "id": 2,
+        "product": 1,
+        "name": "白色10.5寸IPad保护壳",
+        "attributes": [
+          {
+            "key": "color",
+            "value": "white"
+          },
+          {
+            "key": "size",
+            "value": "10.5 inch"
+          }
+        ],
+        "content": "红色10.5寸IPad保护壳",
+        "price": 29.9,
+        "sellPrice": 19.9,
+        "asin": "a1a",
+        "stock": 99,
+        "show": 1,
+        "images": {"1": ""}
+      },
+      {
+        "id": 3,
+        "product": 2,
+        "name": "IPad支架",
+        "attributes": [
+          {
+            "key": "color",
+            "value": "grey"
+          }
+        ],
+        "content": "IPad支架",
+        "price": 12.0,
+        "sellPrice": 6.9,
+        "asin": "a2",
+        "stock": 33,
+        "show": 1,
+        "images": {"1": ""}
+      },
+      {
+        "id": 4,
+        "product": 3,
+        "name": "黑色运动腰包",
+        "attributes": [
+          {
+            "key": "color",
+            "value": "black"
+          }
+        ],
+        "content": "黑色运动腰包",
+        "price": 12.0,
+        "sellPrice": 6.9,
+        "asin": "a3",
+        "stock": 2,
+        "show": 1,
+        "images": {"1": ""}
+      },
+      {
+        "id": 5,
+        "product": 3,
+        "name": "绿色运动腰包",
+        "attributes": [
+          {
+            "key": "color",
+            "value": "green"
+          }
+        ],
+        "content": "绿色运动腰包",
+        "price": 12.0,
+        "sellPrice": 6.9,
+        "asin": "a4",
+        "stock": 1,
+        "show": 1,
+        "images": {"1": ""}
+      },
+      {
+        "id": 6,
+        "product": 4,
+        "name": "运动臂带",
+        "attributes": [
+          {
+            "key": "color",
+            "value": "black"
+          }
+        ],
+        "content": "运动臂带",
+        "price": 12.0,
+        "sellPrice": 6.9,
+        "asin": "a6",
+        "stock": 0,
+        "show": 1,
+        "images": {"1": ""}
+      }
+    ]
+  },
+  {
+    "collection": "receipt_template",
+    "data": [
+      {
+        "id": 1,
+        "name": "email.ftl"
+      }
+    ]
+  },
+  {
+    "collection": "question",
+    "data": [
+      {
+        "id": 1,
+        "question": "如何保修？",
+        "answer": "填好信息,和客服沟通"
+      },
+      {
+        "id": 2,
+        "question": "如何退款?",
+        "answer": "寄回货物,与客服沟通"
+      }
+    ]
+  },
+  {
+    "collection": "feedback",
+    "data": [
+      {
+        "id": 1,
+        "category": 1,
+        "market": 1,
+        "name": "anna",
+        "email": "1@1.com",
+        "order": "ddd1",
+        "product": 1,
+        "suggest": "换货",
+        "image": "1.png",
+        "date": "2017-10-19 01:00:00",
+        "ip": "127.0.0.1"
+      },
+      {
+        "id": 2,
+        "category": 2,
+        "market": 2,
+        "name": "anna1",
+        "email": "1@11.com",
+        "order": "ddd12",
+        "product": 2,
+        "suggest": "退货",
+        "image": "2.png",
+        "date": "2017-12-01 11:11:02",
+        "ip": "127.0.0.2"
+      }
+    ]
+  }
+]

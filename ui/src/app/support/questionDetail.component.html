@@ -1,0 +1,13 @@
+
+<div class="main" *ngIf="question$ | async as _question">
+    问题：<textarea [(ngModel)]="_question.question"></textarea> <br/>
+    答案：<textarea [(ngModel)]="_question.answer"></textarea>
+    <div *ngIf="selectedQuestion; else editBlock">
+        <button (click)="edit(_question)">编辑</button>
+    </div>
+    <ng-template #editBlock>
+        <div>
+            <button (click)="submit(_question)">提交</button>
+        </div>
+    </ng-template>
+</div>

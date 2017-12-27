@@ -1,0 +1,11 @@
+<nav>
+    <ul>
+        <li *ngFor="let menu of menus">
+            <a routerLink="{{menuURL(menu.id, menu.name)}}" routerLinkActive="active">{{menu.desc}}</a>
+            <!--<a routerLink={{menuRouter(menu.name)}} routerLinkActive="active">{{menu.name}}</a>-->
+            <app-tree *ngIf="menu.children && menu.children.length"
+                      [menus]="menu.children" [prefix]="menuRouter(menu.name)"></app-tree>
+        </li>
+    </ul>
+</nav>
+

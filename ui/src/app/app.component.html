@@ -1,0 +1,5 @@
+<h1>后台管理系统</h1>
+<div *ngIf="this.auth.isLoggedIn()" style="border: 3px #b9ecff solid;width: 300px; height: 800px; float: left; margin-right: 10px">
+    <app-tree [menus]="this.backService.menus" [prefix]=""></app-tree>
+</div>
+<router-outlet></router-outlet>

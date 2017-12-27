@@ -1,0 +1,16 @@
+<div class="main">
+    <ul *ngFor="let child of supportService.feedbacks">
+        <li>
+            <div>信息类型: {{child.category}}</div>
+            <div>站点: {{child.market}}</div>
+            <div>姓名: {{child.name}}</div>
+            <div>邮箱: {{child.email}}</div>
+            <div>订单号: {{child.order}}</div>
+            <div>时间: {{child.date}}</div>
+
+            <span><button (click)="deleteFeedback(child.id)" >删除</button>
+                &nbsp;&nbsp;<button [routerLink]="['/support/question', child.id]" >回收站</button>
+            </span>
+        </li>
+    </ul>
+</div>

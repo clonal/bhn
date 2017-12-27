@@ -1,0 +1,9 @@
+@import play.api.i18n.Messages
+@import play.twirl.api.Html
+@(name: String)(implicit messages: Messages)
+
+<html>
+    <body>
+        <p>@messages("email.sign.up.hello", name)</p>
+    </body>
+</html>

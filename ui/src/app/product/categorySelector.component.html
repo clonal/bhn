@@ -1,0 +1,4 @@
+<select [(ngModel)]="chosen" (change)="change($event.target.value)">
+    <option value="0">  ----  </option>
+    <option *ngFor="let tc of topCategories" value={{tc.id}}>{{tc.name}}</option>
+</select>

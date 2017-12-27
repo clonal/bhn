@@ -1,0 +1,14 @@
+<!--<p-growl [value]="msgs"></p-growl>-->
+
+<h3 class="first">Advanced</h3>
+<!--<p-fileUpload name="banner[]" url="./api/menu/upload" (onUpload)="onUpload($event)"-->
+              <!--multiple="multiple" accept="image/*" maxFileSize="1000000">-->
+    <!--<ng-template pTemplate type="content">-->
+        <!--<ul *ngIf="uploadedFiles.length">-->
+            <!--<li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>-->
+        <!--</ul>-->
+    <!--</ng-template>-->
+<!--</p-fileUpload>-->
+
+<input type="file" ng2FileSelect [uploader]="uploader"  (progress)="ss($event)"  (change)="selectedFileOnChanged($event)" />
+

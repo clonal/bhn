@@ -1,0 +1,111 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# entry point of the application
+GET     /                           controllers.Assets.versioned(file = "ui/index.html")
+#GET     /javascriptRoutes           controllers.RouteController.scriptRoutes
+#GET     /route                      controllers.Index.route()
+#
+# all controllers APIs should be placed here. Consider using some prefix to identify then, like '/api' ou '/service'
+#
+
+GET    /api/version.json            controllers.API.version()
+POST   /api/auth/login.json         controllers.auth.JWTLogin.login()
+GET    /api/auth/logout.json        controllers.auth.JWTLogin.logout()
+
++ nocsrf
+POST   /api/auth/signup              controllers.auth.SignUpController.submit()
+POST   /api/auth/signin              controllers.auth.SignInController.authenticate()
+POST   /api/auth/activate/:token     controllers.auth.ActivateAccountController.activate(token: String)
+GET    /activate/:token              controllers.RouteController.activateRoute(token: String)
+GET    /password/reset/:token        controllers.RouteController.resetPasswordRoute(token: String)
+
++ nocsrf
+POST   /api/menu/upload              controllers.system.MenuController.upload
+GET    /api/menu/listMenus           controllers.system.MenuController.listMenus
+POST   /api/menu/deleteImage         controllers.system.MenuController.deleteImage
++ nocsrf
+POST   /api/menu/editImage/:menu/:index                   controllers.system.MenuController.editImage(menu: Int, index: String)
++ nocsrf
+POST   /api/menu/changeImgOrder/:menu/:index/:changeTo    controllers.system.MenuController.changeImageOrder(menu: Int, index: String, changeTo: String)
++ nocsrf
+POST   /api/menu/addBannerImages                          controllers.system.MenuController.addBannerImages(menu: Option[Int])
+GET    /api/menu/findChildrenOfMenu/:menu                 controllers.system.MenuController.findChildrenOfMenu(menu: Int)
++ nocsrf
+POST   /api/menu/changeMenuOrder/:menu/:changeTo          controllers.system.MenuController.changeMenuOrder(menu: Int, changeTo: String)
++ nocsrf
+POST   /api/menu/addMenu                                  controllers.system.MenuController.addMenu
++ nocsrf
+POST   /api/menu/removeMenu/:menu                         controllers.system.MenuController.removeMenu(menu: Int)
+GET    /api/menu/showMenu/:menu                           controllers.system.MenuController.showMenu(menu: Int)
++ nocsrf
+POST   /api/menu/editMenu/:menu                           controllers.system.MenuController.editMenu(menu: Int)
+
+GET    /api/article/showArticle/:article                  controllers.system.ArticleController.showArticle(article: Int)
+GET    /api/article/showArticle/listArticles/:menu        controllers.system.ArticleController.listArticles(menu: Int, asc: Option[Int], recursive: Option[Boolean])
++ nocsrf
+POST   /api/article/addArticle                            controllers.system.ArticleController.addArticle
++ nocsrf
+POST   /api/article/editArticle/:article                  controllers.system.ArticleController.editArticle(article: Int)
++ nocsrf
+POST   /api/article/changeArticleOrder/:article/:changeTo controllers.system.ArticleController.changeArticleOrder(article: Int, changeTo: String)
+GET    /api/article/removeArticle/:article                controllers.system.ArticleController.removeArticle(article: Int)
+
+
+GET    /api/product/listCategories                        controllers.product.ProductController.listCategories
+GET    /api/product/findCategory/:category                controllers.product.ProductController.findCategory(category: Int)
+GET    /api/product/listTopCategories                     controllers.product.ProductController.listTopCategories
++ nocsrf
+POST    /api/product/addCategory                          controllers.product.ProductController.addCategory
++ nocsrf
+POST    /api/product/editCategory                         controllers.product.ProductController.editCategory
++ nocsrf
+POST    /api/product/addCategoryBanner                    controllers.product.ProductController.addCategoryBanner(category: Option[Int])
++ nocsrf
+POST    /api/product/removeCategory/:category             controllers.product.ProductController.removeCategory(category: Int)
+GET    /api/product/listComments                          controllers.product.ProductController.listComments
+GET    /api/product/findComment/:comment                  controllers.product.ProductController.commentDetail(comment: Int)
+GET    /api/product/findComment                           controllers.product.ProductController.findComment(product: Option[Int], sku: Option[Int])
+GET    /api/product/listProducts                          controllers.product.ProductController.listProducts
+GET    /api/product/findProduct/:product                  controllers.product.ProductController.findProduct(product: Int)
++ nocsrf
+POST    /api/product/addProduct                           controllers.product.ProductController.addProduct
++ nocsrf
+POST    /api/product/editProduct/:product                 controllers.product.ProductController.editProduct(product: Int)
++ nocsrf
+POST    /api/product/removeProduct/:product               controllers.product.ProductController.removeProduct(product: Int)
+GET     /api/product/listSkus                             controllers.product.ProductController.listSkus
+GET     /api/product/findSku/:sku                         controllers.product.ProductController.findSku(sku: Int)
+GET     /api/product/findSkusByProduct/:product           controllers.product.ProductController.findSkusByProduct(product: Int)
++ nocsrf
+POST    /api/product/addSku/:product                      controllers.product.ProductController.addSku(product: Int)
++ nocsrf
+POST    /api/product/editSku                              controllers.product.ProductController.editSku
++ nocsrf
+POST    /api/product/removeSku/:sku                       controllers.product.ProductController.removeSku(sku: Int)
+
++ nocsrf
+POST    /api/mws/sendmails                                controllers.amazonWS.MWSController.sendMails(from: Option[String], to: Option[String], template: Option[Int])
+
+GET     /api/question/listQuestions                       controllers.system.QuestionController.listQuestions
++ nocsrf
+POST    /api/question/deleteQuestion/:id                  controllers.system.QuestionController.deleteQuestion(id: Int)
+GET     /api/question/getQuestion/:id                     controllers.system.QuestionController.getQuestion(id: Int)
++ nocsrf
+POST    /api/question/addQuestion                         controllers.system.QuestionController.addQuestion
++ nocsrf
+POST    /api/question/editQuestion                        controllers.system.QuestionController.editQuestion
+
+GET     /api/feedback/listFeedbacks                       controllers.system.FeedbackController.listFeedbacks
++ nocsrf
+POST    /api/feedback/deleteFeedback/:id                  controllers.system.FeedbackController.deleteFeedback(id: Int)
+
+
+
+
+#  end of all controllers APIs
+
+# map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(file)
+GET     /*path                      controllers.Index.catchAll(path)

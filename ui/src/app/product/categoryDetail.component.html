@@ -1,0 +1,35 @@
+<div class="main" *ngIf="category$ | async as _category">
+
+    <div>
+        父级分类
+        <category-selector [chosen]="_category.parent"
+                           (chosenChange)="chosenChanged($event, _category)"></category-selector>
+    </div>
+
+    <div>
+        分类名称
+        <input type="text" [(ngModel)]="_category.name"/>
+    </div>
+
+    <div>
+        简要描述
+        <textarea [(ngModel)]="_category.desc"></textarea>
+    </div>
+
+    <div>
+        BANNER展示图
+        <div *ngIf="_category.banner">
+            <img src='{{"../images/" + _category.banner}}' width="200" height="50" />
+        </div>
+        <input type="file" ng2FileSelect [uploader]="uploader" options=""/>
+    </div>
+
+    <div *ngIf="selectedCategory; else editBlock">
+        <button (click)="edit(_category)">编辑</button>
+    </div>
+    <ng-template #editBlock>
+        <div>
+            <button (click)="submit(_category)">提交</button>
+        </div>
+    </ng-template>
+</div>

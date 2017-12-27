@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<style type="text/css">
+    div div {margin-left: 3%}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>查询订单邮件工具</title>
+</head>
+<body>
+<form>
+    <div>
+        <b>查询范围:</b>
+        <div>
+            订单开始时间: <input type="datetime-local" [(ngModel)]="from" name="from_date"/><br/>
+            订单截至时间: <input type="datetime-local" [(ngModel)]="to" name="to_date"/><br/>
+        </div>
+    </div>
+    <div>
+        <b>发送条件:</b>
+        <div>
+            <label><input name="isSend" [(ngModel)]="isSend" type="radio" value="true" />已发送 </label>
+            <label><input name="isSend" [(ngModel)]="isSend" type="radio" value="false" />未发送 </label>
+            模板:<select [(ngModel)]="filterTemplate" name="filterTemplate">
+            <option value ="1">模板A</option>
+        </select>
+        <br/>
+            距今天数: <input [(ngModel)]="duration" name="duration" type="number" min="0" max="90" step="1" value="1"/>
+        </div>
+    </div>
+    <div>
+        <b>发送模板:</b> <select [(ngModel)]="sendTemplate" name="sendTemplate">
+        <option value ="1">模板A</option>
+    </select>
+    </div>
+    <input type="submit" value="开始任务" (click)="doWork()">
+</form>
+
+</body>
+</html>

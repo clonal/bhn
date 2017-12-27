@@ -1,0 +1,15 @@
+/logs/
+/target/
+/.classpath
+/.project
+/.settings
+/.history
+/RUNNING_PID
+/bin/
+/project/target
+/project/project
+/tmp/
+/mongodb/log
+/mongodb/data
+/.cache-main
+.idea/
