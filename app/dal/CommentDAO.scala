@@ -5,5 +5,5 @@ import models.Comment
 import scala.concurrent.Future
 
 trait CommentDAO extends BaseDAO{
-  def findComment(product: Option[Int], sku: Option[Int]): Future[Seq[Comment]]
+  def findComment(item: Option[Int], sku: Option[Int]): Future[Seq[Comment]]
 }

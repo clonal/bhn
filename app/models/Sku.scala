@@ -6,7 +6,7 @@ import reactivemongo.bson._
 
 import scala.collection.mutable.ArrayBuffer
 
-case class Sku(id: Int, product: Int, name: String,
+case class Sku(id: Int, item: Int, name: String, sku: String,
                attributes: Array[Map[String, String]], content: String, price: Double,
                sellPrice: Double, asin: String, stock: Int, show: Int, images: Map[String, String])
 
@@ -15,8 +15,9 @@ object Sku {
     def read(bson: BSONDocument): Sku = {
       val opt: Option[Sku] = for {
         id <- bson.getAs[Int]("id")
-        product <- bson.getAs[Int]("product")
+        item <- bson.getAs[Int]("item")
         name <- bson.getAs[String]("name")
+        sku <- bson.getAs[String]("sku")
         attributes <- bson.getAs[BSONArray]("attributes")
         content <- bson.getAs[String]("content")
         price <- bson.getAs[Double]("price")
@@ -33,7 +34,7 @@ object Sku {
         val attr = attributes.values.map {
           case b: BSONDocument => b.as[Map[String, String]]
         }
-        new Sku(id, product, name, attr.toArray, content, price, sellPrice, asin, stock, show, images)
+        new Sku(id, item, name, sku, attr.toArray, content, price, sellPrice, asin, stock, show, images)
       }
       opt.get
     }
@@ -42,8 +43,9 @@ object Sku {
   implicit object SkuWriter extends BSONDocumentWriter[Sku] {
     def write(sku: Sku): BSONDocument =
       BSONDocument("id" -> sku.id,
-        "product" -> sku.product,
+        "item" -> sku.item,
         "name" -> sku.name,
+        "sku" -> sku.sku,
         "attributes" -> sku.attributes,
         "content" -> sku.content,
         "price" -> sku.price,

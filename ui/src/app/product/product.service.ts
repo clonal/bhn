@@ -88,7 +88,7 @@ export class ProductService {
     }
 
     deleteProduct(id: number) {
-        this.client.post('/api/product/removeProduct/' + id, {})
+        this.client.post('/api/product/removeItem/' + id, {})
             .subscribe(result => {
                if (result['error']) {
                    alert(result['error']);

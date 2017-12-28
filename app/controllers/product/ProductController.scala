@@ -5,7 +5,7 @@ import java.nio.file.Paths
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
-import models.{Category, Product, Sku}
+import models.{Category, Item, Sku}
 import play.api.Configuration
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsArray, JsObject, Json}
@@ -25,7 +25,7 @@ class ProductController @Inject()(
   final val IMG_PATH = System.getProperty("user.dir") + config.underlying.getString("play.assets.path") + File.separator + "images"
 
   //添加产品
-  def addProduct() = Action.async(parse.json) {
+  def addItem() = Action.async(parse.json) {
     implicit request =>
       val jsObject = request.body
       val skus = (jsObject \ "sku").as[JsArray]
@@ -39,6 +39,7 @@ class ProductController @Inject()(
         Sku(productService.SKU_AUTO_ID.addAndGet(1),
           id,
           (jValue \ "name").as[String],
+          (jValue \ "sku").as[String],
           attributes.toArray,
           (jValue \ "content").as[String],
           (jValue \ "price").as[Double],
@@ -50,7 +51,7 @@ class ProductController @Inject()(
         )
       }
 
-      val product = Product(id,
+      val item = Item(id,
         (jsObject \ "name").as[String],
         (jsObject \ "desc").as[String],
         (jsObject \ "category").as[Array[Int]],
@@ -58,42 +59,23 @@ class ProductController @Inject()(
         (jsObject \ "amazonLink").as[String]
       )
       productService.addSkus(sku).flatMap{ _ =>
-        productService.addProduct(product).map(m => Ok(Json.toJsObject(m)))
+        productService.addItem(item).map(m => Ok(Json.toJsObject(m)))
       }
   }
   //修改产品
-  def editProduct(product: Int) = Action.async(parse.json) {
+  def editItem(item: Int) = Action.async(parse.json) {
     implicit request =>
-      val p = request.body.as[Product]
-      productService.updateProduct(BSONDocument("id" -> p.id), p).map {
+      val p = request.body.as[Item]
+      productService.updateItem(BSONDocument("id" -> p.id), p).map {
         case Some(_) => Ok(Json.obj("info" -> "success"))
         case None => BadRequest(Json.obj("error" -> "none to update"))
       }
-      /*productService.findProduct(product).flatMap{
-        case Some(p) =>
-          var modifier = BSONDocument.empty
-          (request.body \ "name").asOpt[String].foreach{ v =>
-            modifier ++= ("name" -> v)
-          }
-          (request.body \ "desc").asOpt[String].foreach{ v =>
-            modifier ++= ("desc" -> v)
-          }
-          (request.body \ "category").asOpt[Array[Int]].foreach{ v =>
-            modifier ++= ("category" -> v)
-          }
-          (request.body \ "amazonLink").asOpt[String].foreach{ v =>
-            modifier ++= ("amazonLink" -> v)
-          }
-          productService.updateProduct(BSONDocument("id" -> product), modifier).map(_ => Ok(Json.obj("info" -> "ok")))
-        case None =>
-          Future(BadRequest(Json.obj("error" -> "wrong product")))
-      }*/
   }
 
   //删除产品
-  def removeProduct(product: Int) = Action.async {
+  def removeItem(item: Int) = Action.async {
     implicit request =>
-      productService.removeProduct(product).map {
+      productService.removeItem(item).map {
         case Some(p) =>
           p.sku.foreach{ s => //TODO 是否要考虑等这个业务完成后再返回结果
             productService.removeSku(s)
@@ -105,25 +87,24 @@ class ProductController @Inject()(
   }
 
   //产品列表
-  def listProducts() = Action.async {
+  def listItems() = Action.async {
     implicit request =>
-      productService.queryProducts().map{ list =>
+      productService.queryItems().map{ list =>
         Ok(JsArray(list.map(x => Json.toJson(x))))
-//        Ok(list.foldLeft(JsObject.empty)((acc, x) => acc ++ Json.obj(x.id.toString -> x.name)))
       }
   }
 
   //查找产品
-  def findProduct(product: Int) = Action.async {
+  def findItem(item: Int) = Action.async {
     implicit request =>
-      productService.findProduct(product).map{
+      productService.findItem(item).map{
         case Some(c) => Ok(Json.obj("product" -> Json.toJsObject(c)))
         case None => BadRequest(Json.obj("error" -> "wrong product"))
       }
   }
 
   //添加sku
-  def addSku(product: Int) = Action.async(parse.json) {
+  def addSku(item: Int) = Action.async(parse.json) {
     implicit request =>
           val jValue = request.body.as[JsObject]
           val attributes = (jValue \ "attributes").as[JsArray].value map { v =>
@@ -133,8 +114,9 @@ class ProductController @Inject()(
           }
           val id = productService.SKU_AUTO_ID.addAndGet(1)
           val sku = Sku(id,
-            product,
+            item,
             (jValue \ "name").as[String],
+            (jValue \ "sku").as[String],
             attributes.toArray,
             (jValue \ "content").as[String],
             (jValue \ "price").as[Double],
@@ -146,71 +128,25 @@ class ProductController @Inject()(
           )
 
           productService.addSku(sku).flatMap{ s =>
-            productService.getProduct(product) match {
+            productService.getItem(item) match {
               case Some(p) =>
-                productService.updateProduct(BSONDocument("id" -> product),
+                productService.updateItem(BSONDocument("id" -> item),
                   p.copy(sku = p.sku :+ s.id)).map(_ => Ok(Json.toJsObject(sku)))
               case _ =>
                 Future(BadRequest(Json.obj("error" -> "no product to add")))
             }
           }
-
-      /*productService.findProduct(product).flatMap {
-        case Some(p) =>
-          val jValue = request.body.as[JsObject]
-          val attributes = (jValue \ "attributes").as[JsArray].value map { v =>
-            val key = (v \ "key").as[String]
-            val value = (v \ "value").as[String]
-            Map("key" -> key,"value" -> value)
-          }
-          val id = productService.SKU_AUTO_ID.addAndGet(1)
-          val sku = Sku(id,
-              product,
-              (jValue \ "name").as[String],
-              attributes.toArray,
-              (jValue \ "content").as[String],
-              (jValue \ "price").as[Double],
-              (jValue \ "sellPrice").as[Double],
-              (jValue \ "asin").as[String],
-              (jValue \ "stock").as[Int],
-              (jValue \ "show").as[Int],
-              (jValue \ "images").as[Map[String, String]]
-            )
-
-          productService.addSku(sku).flatMap{ _ =>
-            val modifier = BSONDocument("sku" -> BSONArray(p.sku :+ id))
-            productService.updateProduct(BSONDocument("id" -> product),
-              modifier).map(m => Ok(Json.toJsObject(sku)))
-          }
-        case None =>
-          Future(BadRequest(Json.obj("error" -> "no product to add")))
-      }*/
   }
   //删除sku
   def removeSku(sku: Int) = Action.async {
     implicit request =>
       productService.removeSku(sku).map { case Some(s) =>
-        productService.getProduct(s.product).map{ p =>
+        productService.getItem(s.item).map{ p =>
           val _p = p.copy(sku = p.sku.filterNot(_ == s.id))
-          productService.updateProduct(BSONDocument("id" -> p.id), _p)
+          productService.updateItem(BSONDocument("id" -> p.id), _p)
         }
         Ok(Json.obj("info" -> "delete completed!"))
       }
-      /*productService.findSku(sku).flatMap {
-        case Some(s) =>
-          productService.removeSku(sku).flatMap{ _ =>
-            productService.findProduct(s.product).flatMap{
-              case Some(p) =>
-                val modifier = BSONDocument("sku" -> BSONArray(p.sku.filterNot(_ == s.id)))
-                productService.updateProduct(BSONDocument("id" -> p.id),
-                  modifier).map(m => Ok(Json.obj("info" -> "delete completed!")))
-              case None =>
-                Future(Ok(Json.obj("info" -> "delete completed!")))
-            }
-          }
-        case None =>
-          Future(BadRequest(Json.obj("error" -> "nothing to delete")))
-      }*/
   }
 
   //编辑sku
@@ -218,44 +154,10 @@ class ProductController @Inject()(
     implicit  request =>
       val s = request.body.as[Sku]
       productService.updateSku(BSONDocument("id" -> s.id), s).flatMap { case Some(sk) =>
-        productService.updateProductSku(s.id, sk.id).map(_ =>
+        productService.updateItemSku(s.id, sk.id).map(_ =>
           Ok(Json.obj("info" -> "ok"))
         )
       }
-      /*productService.findSku(sku).flatMap{
-        case Some(s) =>
-          var modifier = BSONDocument.empty
-          (request.body \ "name").asOpt[String].foreach{ v =>
-            modifier ++= ("name" -> v)
-          }
-          (request.body \ "attributes").asOpt[Array[Map[String, String]]].foreach{ v =>
-            modifier ++= ("attributes" -> v)
-          }
-          (request.body \ "content").asOpt[String].foreach{ v =>
-            modifier ++= ("content" -> v)
-          }
-          (request.body \ "price").asOpt[Double].foreach{ v =>
-            modifier ++= ("price" -> v)
-          }
-          (request.body \ "sellPrice").asOpt[Double].foreach{ v =>
-            modifier ++= ("sellPrice" -> v)
-          }
-          (request.body \ "asin").asOpt[String].foreach{ v =>
-            modifier ++= ("asin" -> v)
-          }
-          (request.body \ "stock").asOpt[Int].foreach{ v =>
-            modifier ++= ("stock" -> v)
-          }
-          (request.body \ "show").asOpt[Int].foreach{ v =>
-            modifier ++= ("show" -> v)
-          }
-          (request.body \ "images").asOpt[Map[String, String]].foreach{ v =>
-            modifier ++= ("images" -> v)
-          }
-          productService.updateSku(BSONDocument("id" -> sku), modifier).map(_ => Ok(Json.obj("info" -> "ok")))
-        case None =>
-          Future(BadRequest(Json.obj("error" -> "wrong sku")))
-      }*/
   }
 
   //查找sku
@@ -267,9 +169,9 @@ class ProductController @Inject()(
       }
   }
 
-  def findSkusByProduct(product: Int) = Action.async {
+  def findSkusByItem(item: Int) = Action.async {
     implicit request =>
-      productService.findSkusByProduct(product).map{ list =>
+      productService.findSkusByItem(item).map{ list =>
         Ok(list.foldLeft(JsObject.empty)((acc, x) => acc ++ Json.obj(x.id.toString -> x.name)))
       }
   }
@@ -300,7 +202,7 @@ class ProductController @Inject()(
     implicit request =>
       val c = request.body.as[Category]
       productService.updateCategory(BSONDocument("id" -> c.id), c).flatMap { case Some(cate) =>
-        productService.updateProductCategory(c.id, cate.id).map(_ =>
+        productService.updateItemCategory(c.id, cate.id).map(_ =>
           Ok(Json.obj("info" -> s"edit ${c.name} ok"))
         )
       }
@@ -382,9 +284,9 @@ class ProductController @Inject()(
   }
 
   //查找评论 根据产品和型号
-  def findComment(product: Option[Int], sku: Option[Int]) = Action.async {
+  def findComment(item: Option[Int], sku: Option[Int]) = Action.async {
     implicit request =>
-      productService.findComment(product, sku).map{ list =>
+      productService.findComment(item, sku).map{ list =>
         Ok(list.foldLeft(JsObject.empty)((acc, x) => acc ++ Json.obj(x.id.toString -> x.title)))
       }
   }

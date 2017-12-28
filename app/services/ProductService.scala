@@ -2,7 +2,7 @@ package services
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import models.{Category, Comment, Product, Sku}
+import models.{Category, Comment, Item, Sku}
 import play.api.libs.json.JsArray
 import reactivemongo.api.commands.{UpdateWriteResult, WriteResult}
 import reactivemongo.bson.BSONDocument
@@ -10,58 +10,50 @@ import reactivemongo.bson.BSONDocument
 import scala.concurrent.Future
 
 trait ProductService {
-  def updateCategoryBanner(cate: Int, filename: String)
-
   val CATEGORY_AUTO_ID = new AtomicInteger()
-  val PRODUCT_AUTO_ID = new AtomicInteger()
+  val ITEM_AUTO_ID = new AtomicInteger()
   val SKU_AUTO_ID = new AtomicInteger()
 
-  def getProduct(product: Int): Option[Product]
+  def getItem(item: Int): Option[Item]
 
   def initSku(data: JsArray)
   def initCategory(data: JsArray)
-  def initProduct(data: JsArray)
+  def initItem(data: JsArray)
 
   def getLastCategoryID(): Future[Option[Int]]
-  def getLastProductID(): Future[Option[Int]]
+  def getLastItemID(): Future[Option[Int]]
   def getLastSkuID(): Future[Option[Int]]
 
   def addCategory(category: Category): Future[Category]
   def addCategories(data: JsArray): Future[Seq[Category]]
-  def addProduct(product: Product): Future[Product]
-  def addProducts(data: JsArray): Future[Seq[Product]]
+  def addItem(item: Item): Future[Item]
+  def addItems(data: JsArray): Future[Seq[Item]]
   def addSku(sku: Sku): Future[Sku]
   def addSkus(sku: IndexedSeq[Sku]): Future[Seq[Sku]]
   def addSkus(data: JsArray): Future[Seq[Sku]]
 
-  def findProduct(product: Int): Future[Option[Product]]
+  def findItem(item: Int): Future[Option[Item]]
   def findCategory(category: Int): Future[Option[Category]]
   def findSku(sku: Int): Future[Option[Sku]]
-  def findSkusByProduct(product: Int): Future[Seq[Sku]]
+  def findSkusByItem(item: Int): Future[Seq[Sku]]
   def findComment(comment: Int): Future[Option[Comment]]
-  def findComment(product: Option[Int], sku: Option[Int]): Future[Seq[Comment]]
+  def findComment(item: Option[Int], sku: Option[Int]): Future[Seq[Comment]]
 
   def removeCategory(category: Int): Future[Option[Category]]
-  def removeProduct(product: Int): Future[Option[Product]]
+  def removeItem(item: Int): Future[Option[Item]]
   def removeSku(sku: Int): Future[Option[Sku]]
 
-  @deprecated
-  def updateCategory(selector: BSONDocument, modifier: BSONDocument): Future[UpdateWriteResult]
-  @deprecated
-  def updateProduct(selector: BSONDocument, modifier: BSONDocument): Future[UpdateWriteResult]
-  @deprecated
-  def updateSku(selector: BSONDocument, modifier: BSONDocument): Future[UpdateWriteResult]
-
   def updateCategory(selector: BSONDocument, category: Category): Future[Option[Category]]
-  def updateProduct(selector: BSONDocument, product: Product): Future[Option[Product]]
+  def updateItem(selector: BSONDocument, item: Item): Future[Option[Item]]
   def updateSku(selector: BSONDocument, sku: Sku): Future[Option[Sku]]
 
-  def updateProductCategory(category: Int, id: Int): Future[Seq[Option[Product]]]
-  def updateProductSku(sku: Int, id: Int): Future[Seq[Option[Product]]]
+  def updateItemCategory(category: Int, id: Int): Future[Seq[Option[Item]]]
+  def updateItemSku(sku: Int, id: Int): Future[Seq[Option[Item]]]
+  def updateCategoryBanner(cate: Int, filename: String)
 
   def queryCategories(): Future[Seq[Category]]
   def queryTopCategories(): Future[Seq[Category]]
-  def queryProducts(): Future[Seq[Product]]
+  def queryItems(): Future[Seq[Item]]
   def querySkus(): Future[Seq[Sku]]
   def queryComments(): Future[Seq[Comment]]
 }

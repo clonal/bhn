@@ -13,7 +13,7 @@ case class Feedback(id: Int,
                     name: String,
                     email: String,
                     order: String,
-                    product: Int,
+                    item: Int,
                     suggest: String,
                     image: String,
                     date: DateTime,
@@ -47,12 +47,12 @@ object Feedback {
         name <- bson.getAs[String]("name")
         email <- bson.getAs[String]("email")
         order <- bson.getAs[String]("order")
-        product <- bson.getAs[Int]("product")
+        item <- bson.getAs[Int]("item")
         suggest <- bson.getAs[String]("suggest")
         image <- bson.getAs[String]("image")
         date <- bson.getAs[Date]("date")
         ip <- bson.getAs[String]("ip")
-      } yield new Feedback(id, category, market, name, email, order, product, suggest,
+      } yield new Feedback(id, category, market, name, email, order, item, suggest,
         image, new DateTime(date), ip)
       opt.get // the person is required (or let throw an exception)
     }
@@ -66,7 +66,7 @@ object Feedback {
         "name" -> feedback.name,
         "email" -> feedback.email,
         "order" -> feedback.order,
-        "product" -> feedback.product,
+        "item" -> feedback.item,
         "suggest" -> feedback.suggest,
         "image" -> feedback.image,
         "date" -> feedback.date.toDate,

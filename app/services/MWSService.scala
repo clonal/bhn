@@ -2,7 +2,7 @@ package services
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import models.{Product, Receipt}
+import models.{Item, Receipt}
 import play.api.i18n.Messages
 import play.api.libs.json.JsArray
 import play.api.libs.mailer.Email

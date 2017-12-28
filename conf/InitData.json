@@ -222,7 +222,7 @@
     ]
   },
   {
-    "collection": "product",
+    "collection": "item",
     "data": [
       {
         "id": 1,
@@ -263,7 +263,8 @@
     "data": [
       {
         "id": 1,
-        "product": 1,
+        "item": 1,
+        "sku": "red 10.5inch",
         "name": "红色10.5寸IPad保护壳",
         "attributes": [
           {
@@ -285,7 +286,8 @@
       },
       {
         "id": 2,
-        "product": 1,
+        "item": 1,
+        "sku": "white 10.5inch",
         "name": "白色10.5寸IPad保护壳",
         "attributes": [
           {
@@ -307,7 +309,8 @@
       },
       {
         "id": 3,
-        "product": 2,
+        "item": 2,
+        "sku": "red1 10.5inch",
         "name": "IPad支架",
         "attributes": [
           {
@@ -325,7 +328,8 @@
       },
       {
         "id": 4,
-        "product": 3,
+        "item": 3,
+        "sku": "black 10.5inch",
         "name": "黑色运动腰包",
         "attributes": [
           {
@@ -343,7 +347,8 @@
       },
       {
         "id": 5,
-        "product": 3,
+        "item": 3,
+        "sku": "green 10.5inch",
         "name": "绿色运动腰包",
         "attributes": [
           {
@@ -361,7 +366,8 @@
       },
       {
         "id": 6,
-        "product": 4,
+        "item": 4,
+        "sku": "sport 10.5inch",
         "name": "运动臂带",
         "attributes": [
           {
@@ -413,7 +419,7 @@
         "name": "anna",
         "email": "1@1.com",
         "order": "ddd1",
-        "product": 1,
+        "item": 1,
         "suggest": "换货",
         "image": "1.png",
         "date": "2017-10-19 01:00:00",
@@ -426,7 +432,7 @@
         "name": "anna1",
         "email": "1@11.com",
         "order": "ddd12",
-        "product": 2,
+        "item": 2,
         "suggest": "退货",
         "image": "2.png",
         "date": "2017-12-01 11:11:02",

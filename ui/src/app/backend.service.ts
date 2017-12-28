@@ -233,7 +233,7 @@ export class BackendService {
     }
 
     getProducts(): Observable<Product[]> {
-        return this.client.get('/api/product/listProducts')
+        return this.client.get('/api/product/listItems')
             .map((data) => {
                 return data as Product[];
             });

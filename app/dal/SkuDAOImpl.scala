@@ -15,8 +15,8 @@ class SkuDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Rea
   override def collection: Future[BSONCollection] = reactiveMongoApi.database.map(_.collection("sku"))
 
 
-  override def findSkusByProduct(product: Int) = {
-    collection.flatMap(_.find(BSONDocument("product" -> product)).cursor[Sku].collect[List]())
+  override def findSkusByItem(item: Int) = {
+    collection.flatMap(_.find(BSONDocument("item" -> item)).cursor[Sku].collect[List]())
   }
 
   override def addSkus(data: JsArray) = {
@@ -30,8 +30,9 @@ class SkuDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Rea
     collection.flatMap(_.insert(sku)).map{ _ =>
       new Sku(
         (sku \ "id").as[Int],
-        (sku \ "product").as[Int],
+        (sku \ "item").as[Int],
         (sku \ "name").as[String],
+        (sku \ "sku").as[String],
         (sku \ "attributes").as[Array[Map[String, String]]],
         (sku \ "content").as[String],
         (sku \ "price").as[Double],

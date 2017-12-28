@@ -13,9 +13,9 @@ class ReceiptTemplateDAOImpl @Inject()(implicit ec: ExecutionContext,
                                        reactiveMongoApi: ReactiveMongoApi) extends ReceiptTemplateDAO {
   override def collection: Future[BSONCollection] = reactiveMongoApi.database.map(_.collection("receipt_template"))
 
-  override def addTemplate(data: JsArray) = {
-    val f = for(product <- data.value) yield {
-      addTemplate(product.as[JsObject])
+  override def addTemplate(data: JsArray): Future[IndexedSeq[(Int,String)]] = {
+    val f = for(template <- data.value) yield {
+      addTemplate(template.as[JsObject])
     }
     Future.sequence(f)
   }

@@ -64,22 +64,22 @@ POST    /api/product/editCategory                         controllers.product.Pr
 POST    /api/product/addCategoryBanner                    controllers.product.ProductController.addCategoryBanner(category: Option[Int])
 + nocsrf
 POST    /api/product/removeCategory/:category             controllers.product.ProductController.removeCategory(category: Int)
-GET    /api/product/listComments                          controllers.product.ProductController.listComments
-GET    /api/product/findComment/:comment                  controllers.product.ProductController.commentDetail(comment: Int)
-GET    /api/product/findComment                           controllers.product.ProductController.findComment(product: Option[Int], sku: Option[Int])
-GET    /api/product/listProducts                          controllers.product.ProductController.listProducts
-GET    /api/product/findProduct/:product                  controllers.product.ProductController.findProduct(product: Int)
+GET     /api/product/listComments                         controllers.product.ProductController.listComments
+GET     /api/product/findComment/:comment                 controllers.product.ProductController.commentDetail(comment: Int)
+GET     /api/product/findComment                          controllers.product.ProductController.findComment(item: Option[Int], sku: Option[Int])
+GET     /api/product/listItems                            controllers.product.ProductController.listItems
+GET     /api/product/findProduct/:item                    controllers.product.ProductController.findItem(item: Int)
 + nocsrf
-POST    /api/product/addProduct                           controllers.product.ProductController.addProduct
+POST    /api/product/addItem                              controllers.product.ProductController.addItem
 + nocsrf
-POST    /api/product/editProduct/:product                 controllers.product.ProductController.editProduct(product: Int)
+POST    /api/product/editItem/:item                       controllers.product.ProductController.editItem(item: Int)
 + nocsrf
-POST    /api/product/removeProduct/:product               controllers.product.ProductController.removeProduct(product: Int)
+POST    /api/product/removeItem/:item                     controllers.product.ProductController.removeItem(item: Int)
 GET     /api/product/listSkus                             controllers.product.ProductController.listSkus
 GET     /api/product/findSku/:sku                         controllers.product.ProductController.findSku(sku: Int)
-GET     /api/product/findSkusByProduct/:product           controllers.product.ProductController.findSkusByProduct(product: Int)
+GET     /api/product/findSkusByItem/:item                 controllers.product.ProductController.findSkusByItem(item: Int)
 + nocsrf
-POST    /api/product/addSku/:product                      controllers.product.ProductController.addSku(product: Int)
+POST    /api/product/addSku/:item                         controllers.product.ProductController.addSku(item: Int)
 + nocsrf
 POST    /api/product/editSku                              controllers.product.ProductController.editSku
 + nocsrf

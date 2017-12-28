@@ -6,7 +6,7 @@ import play.api.libs.json.Json
 import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 import reactivemongo.bson.{BSONArray, BSONDocument, BSONInteger}
 
-class ProductController extends PlaySpecification with Mockito with JsonMatchers {
+class ItemController extends PlaySpecification with Mockito with JsonMatchers {
   sequential
 
 /*    "测试 展示分类   " in new WithApplication() {
