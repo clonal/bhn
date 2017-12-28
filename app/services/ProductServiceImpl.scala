@@ -207,7 +207,7 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
 
   override def queryItems() = {
     Future(items.values.toList)
-//    productDAO.findAll[Product]
+//    productDAO.findAll[Item]
   }
 
   override def queryProducts() = {

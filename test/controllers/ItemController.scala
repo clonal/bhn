@@ -82,7 +82,7 @@ class ItemController extends PlaySpecification with Mockito with JsonMatchers {
 
 /*  "测试 添加产品   " in new WithApplication() {
     val request = FakeRequest("POST", "/api/product/addProduct").withJsonBody(Json.obj(
-      "sku" -> Json.arr(Json.obj(
+      "product" -> Json.arr(Json.obj(
           "attributes" -> Json.arr(Json.obj("key" -> "aa", "value" -> "bb"), Json.obj("key" -> "cc", "value" -> "dd")),
           "name" -> "aaa",
           "content" -> "aaa1",
@@ -155,7 +155,7 @@ class ItemController extends PlaySpecification with Mockito with JsonMatchers {
 
 /*  "测试 查找skus   " in new WithApplication() {
     val request = FakeRequest("POST", "/api/product/addSku/3").withJsonBody(Json.obj(
-      "name" -> "new sku",
+      "name" -> "new product",
       "attributes" -> Array[Map[String, String]](Map("key" -> "key1", "value" -> "value1"), Map("key" -> "key2", "value" -> "value2")),
       "content" -> "content1",
       "price" -> 11.0,

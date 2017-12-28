@@ -5,10 +5,10 @@ import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {ProductService} from './product.service';
 import {ProductComponent} from './product.component';
-import {ProductListComponent} from './productList.component';
+import {ItemListComponent} from './itemList.component';
 import {CategoryDetailComponent} from './categoryDetail.component';
 import {CategoryListComponent} from './categoryList.component';
-import {ProductDetailComponent} from './productDetail.component';
+import {ItemDetailComponent} from './itemDetail.component';
 import {ProductNavComponent} from './productNav.component';
 import {CategorySelectorComponent} from './categorySelector.component';
 
@@ -21,8 +21,8 @@ import {CategorySelectorComponent} from './categorySelector.component';
     ],
     declarations: [
         ProductComponent,
-        ProductListComponent,
-        ProductDetailComponent,
+        ItemListComponent,
+        ItemDetailComponent,
         CategoryDetailComponent,
         CategoryListComponent,
         ProductNavComponent,

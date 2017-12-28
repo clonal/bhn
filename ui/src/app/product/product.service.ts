@@ -1,39 +1,39 @@
 import {Injectable} from '@angular/core';
-import {Product} from '../model/product';
 import {BackendService} from '../backend.service';
 import {LoggerService} from '../utils/logger.service';
 import {Observable} from 'rxjs/Observable';
 import {Category} from '../model/category';
 import {HttpClient} from '@angular/common/http';
 import {FileUploader} from 'ng2-file-upload';
+import {Item} from '../model/item';
 
 @Injectable()
 export class ProductService {
-    products: Product[];
+    items: Item[];
     categories: Category[];
 
     constructor(private backendService: BackendService,
                 private logger: LoggerService,
                 private client: HttpClient) {
-        this.initProducts();
+        this.initItems();
         this.initCategories();
     }
 
-    initProducts() {
-        this.backendService.getProducts().subscribe(result =>
-            this.products = result
+    initItems() {
+        this.backendService.getItems().subscribe(result =>
+            this.items = result
         );
     }
 
     initCategories() {
-        this.client.get('/api/product/listCategories').subscribe(result =>
+        this.client.get('/api/item/listCategories').subscribe(result =>
             this.categories = result as Category[]
         );
     }
 
     getCategory(id: string | any): Observable<Category> {
         let str = id == null ? '' : id;
-        return this.client.get('/api/product/findCategory/' + str)
+        return this.client.get('/api/item/findCategory/' + str)
             .map(result => {
                 if (result) {
                     if (result['error']) {
@@ -48,17 +48,17 @@ export class ProductService {
     }
 
     getTopCategories(): Observable<Category[]> {
-        return this.client.get('api/product/listTopCategories')
+        return this.client.get('api/item/listTopCategories')
             .map(result => {
                 return result as Category[];
             });
     }
 
     addCategory(category: Category, uploader: FileUploader) {
-        this.client.post('/api/product/addCategory', category).subscribe( result => {
+        this.client.post('/api/item/addCategory', category).subscribe( result => {
             let c = result as Category;
             let op = uploader.options;
-            op.url = '/api/product/addCategoryBanner?category=' + c.id;
+            op.url = '/api/item/addCategoryBanner?category=' + c.id;
             uploader.setOptions(op);
             uploader.uploadAll();
             this.initCategories();
@@ -66,7 +66,7 @@ export class ProductService {
     }
 
     deleteCategory(id: number) {
-        this.client.post('/api/product/removeCategory/' + id, {}).subscribe(result => {
+        this.client.post('/api/item/removeCategory/' + id, {}).subscribe(result => {
            if (result['info']) {
                this.initCategories();
                alert(result['info']);
@@ -75,10 +75,10 @@ export class ProductService {
     }
 
     editCategory(category: Category, uploader: FileUploader) {
-        this.client.post('/api/product/editCategory', category).subscribe(result => {
+        this.client.post('/api/item/editCategory', category).subscribe(result => {
             if (result['info']) {
                 let op = uploader.options;
-                op.url = '/api/product/addCategoryBanner?category=' + category.id;
+                op.url = '/api/item/addCategoryBanner?category=' + category.id;
                 uploader.setOptions(op);
                 uploader.uploadAll();
                 this.initCategories();
@@ -87,31 +87,31 @@ export class ProductService {
         });
     }
 
-    deleteProduct(id: number) {
-        this.client.post('/api/product/removeItem/' + id, {})
+    deleteItem(id: number) {
+        this.client.post('/api/item/removeItem/' + id, {})
             .subscribe(result => {
                if (result['error']) {
                    alert(result['error']);
                }
                if (result['info']) {
-                   this.initProducts();
+                   this.initItems();
                    alert(result['info']);
                }
             });
     }
 
-    getProduct(id: string | any): Observable<Product> {
+    getItem(id: string | any): Observable<Item> {
         let str = id == null ? '' : id;
-        return this.client.get('/api/product/findItem/' + str)
+        return this.client.get('/api/item/findItem/' + str)
             .map(result => {
                 if (result) {
                     if (result['error']) {
-                        return new Product(0, '', '', [0], [0], '');
-                    } else if (result['product']) {
-                        return result['product'] as Product;
+                        return new Item(0, '', '', [0], [0], '');
+                    } else if (result['item']) {
+                        return result['item'] as Item;
                     }
                 } else {
-                    return new Product(0, '', '', [0], [0], '');
+                    return new Item(0, '', '', [0], [0], '');
                 }
             });
     }

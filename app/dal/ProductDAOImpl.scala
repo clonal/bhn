@@ -22,26 +22,26 @@ class ProductDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi:
   override def addProducts(data: JsArray) = {
     val f = for(product <- data.value) yield {
       save(product.as[Product])
-//      addProduct(sku.as[JsObject])
+//      addProduct(product.as[JsObject])
     }
     Future.sequence(f)
   }
 
-  /*override def addProduct(sku: JsObject) = {
-    collection.flatMap(_.insert(sku)).map{ _ =>
+  /*override def addProduct(product: JsObject) = {
+    collection.flatMap(_.insert(product)).map{ _ =>
       new Sku(
-        (sku \ "id").as[Int],
-        (sku \ "item").as[Int],
-        (sku \ "name").as[String],
-        (sku \ "sku").as[String],
-        (sku \ "attributes").as[Array[Map[String, String]]],
-        (sku \ "content").as[String],
-        (sku \ "price").as[Double],
-        (sku \ "sellPrice").as[Double],
-        (sku \ "asin").as[String],
-        (sku \ "stock").as[Int],
-        (sku \ "show").as[Int],
-        (sku \ "images").as[Map[String, String]]
+        (product \ "id").as[Int],
+        (product \ "item").as[Int],
+        (product \ "name").as[String],
+        (product \ "product").as[String],
+        (product \ "attributes").as[Array[Map[String, String]]],
+        (product \ "content").as[String],
+        (product \ "price").as[Double],
+        (product \ "sellPrice").as[Double],
+        (product \ "asin").as[String],
+        (product \ "stock").as[Int],
+        (product \ "show").as[Int],
+        (product \ "images").as[Map[String, String]]
       )}
   }*/
 }

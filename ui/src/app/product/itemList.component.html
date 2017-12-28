@@ -1,0 +1,11 @@
+<div class="main">
+    <ul *ngFor="let child of productService.items">
+        <li><a [routerLink]="['/item/item', child.id]">{{child.name}}</a>
+            <span><button (click)="deleteItem(child.id)" >删除</button>
+                &nbsp;&nbsp;<button [routerLink]="['/item/item', child.id]" >编辑</button>
+                &nbsp;&nbsp;<button >排序</button>
+            </span>
+        </li>
+    </ul>
+</div>
+

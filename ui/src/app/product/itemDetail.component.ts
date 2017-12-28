@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Product} from '../model/product';
+import {Item} from '../model/item';
 import {FileUploader} from 'ng2-file-upload';
 import {ProductService} from './product.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
@@ -7,14 +7,14 @@ import {LoggerService} from '../utils/logger.service';
 import {Observable} from 'rxjs/Observable';
 
 @Component({
-    templateUrl: 'productDetail.component.html'
+    templateUrl: 'itemDetail.component.html'
 })
 
-export class ProductDetailComponent implements OnInit{
-    product$: Observable<Product>;
-    selectedProduct: string;
+export class ItemDetailComponent implements OnInit {
+    item$: Observable<Item>;
+    selectedItem: string;
     uploader: FileUploader = new FileUploader({
-        url: '/api/product/addCategoryBanner',
+        url: '/api/item/addCategoryBanner',
         method: 'POST'
     });
     constructor(private productService: ProductService,
@@ -24,12 +24,12 @@ export class ProductDetailComponent implements OnInit{
 
 
     ngOnInit(): void {
-        this.product$ = this.route.paramMap
+        this.item$ = this.route.paramMap
             .switchMap((params: ParamMap) =>
-                this.productService.getProduct(params.get('id')));
+                this.productService.getItem(params.get('id')));
         this.route.paramMap.subscribe(params => {
                 if (params.has('id')) {
-                    this.selectedProduct = params.get('id');
+                    this.selectedItem = params.get('id');
                 }
             }
         );

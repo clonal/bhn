@@ -1,31 +1,31 @@
-<div class="main" *ngIf="product$ | async as _product">
+<div class="main" *ngIf="item$ | async as _item">
     <div>
         产品分类
-        <select [(ngModel)]="_product.category">
+        <select [(ngModel)]="_item.category">
             <option *ngFor="let category of productService.categories" value={{category.id}}>{{category.name}}</option>
         </select>
     </div>
 
     <div>
         产品名称
-        <input [(ngModel)]="_product.name" type="text" />
+        <input [(ngModel)]="_item.name" type="text" />
     </div>
 
     <div>
         产品描述
-        <textarea [(ngModel)]="_product.desc"></textarea>
+        <textarea [(ngModel)]="_item.desc"></textarea>
     </div>
 
     <div class="sku">
     </div>
 
 
-    <div *ngIf="selectedProduct; else editBlock">
-        <button (click)="edit(_product)">编辑</button>
+    <div *ngIf="selectedItem; else editBlock">
+        <button (click)="edit(_item)">编辑</button>
     </div>
     <ng-template #editBlock>
         <div>
-            <button (click)="submit(_product)">提交</button>
+            <button (click)="submit(_item)">提交</button>
         </div>
     </ng-template>
 </div>
