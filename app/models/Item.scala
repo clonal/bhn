@@ -4,7 +4,7 @@ import play.api.libs.json.{Json, OFormat}
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 case class Item(id: Int, name: String, desc: String,
-                category: Array[Int], sku: Array[Int], amazonLink: String)
+                category: Array[Int], product: Array[Int], amazonLink: String)
 
 object Item {
   implicit object ItemReader extends BSONDocumentReader[Item] {
@@ -14,9 +14,9 @@ object Item {
         name <- bson.getAs[String]("name")
         desc <- bson.getAs[String]("desc")
         category <- bson.getAs[Array[Int]]("category")
-        sku <- bson.getAs[Array[Int]]("sku")
+        product <- bson.getAs[Array[Int]]("product")
       } yield {
-        new Item(id, name, desc, category, sku, bson.getAs[String]("amazonLink").getOrElse(""))
+        new Item(id, name, desc, category, product, bson.getAs[String]("amazonLink").getOrElse(""))
       }
       opt.get
     }
@@ -28,7 +28,7 @@ object Item {
         "name" -> item.name,
         "desc" -> item.desc,
         "category" -> item.category,
-        "sku" -> item.sku,
+        "product" -> item.product,
         "amazonLink" -> item.amazonLink)
   }
 

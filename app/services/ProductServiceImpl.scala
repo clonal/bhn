@@ -2,8 +2,8 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import dal.{CategoryDAO, CommentDAO, ItemDAO, SkuDAO}
-import models.{Category, Comment, Item, Sku}
+import dal.{CategoryDAO, CommentDAO, ItemDAO, ProductDAO}
+import models.{Category, Comment, Item, Product}
 import play.api.libs.json.JsArray
 import reactivemongo.bson.BSONDocument
 
@@ -14,27 +14,27 @@ import scala.util.Success
 class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
                                     commentDAO: CommentDAO,
                                     categoryDAO: CategoryDAO,
-                                    skuDAO: SkuDAO )
+                                    productDAO: ProductDAO )
                                    (implicit ex: ExecutionContext) extends ProductService{
 
   final var items: Map[Int, Item] = Map.empty
   final var categories: Map[Int, Category] = Map.empty
-  final var skus: Map[Int, Sku] = Map.empty
+  final var products: Map[Int, Product] = Map.empty
 
 
   override def getItem(item: Int) = {
     items.get(item)
   }
 
-  override def initSku(data: JsArray): Unit = {
-    skuDAO.isEmpty.flatMap{
-      case true => addSkus(data)
+  override def initProduct(data: JsArray): Unit = {
+    productDAO.isEmpty.flatMap{
+      case true => addProducts(data)
     } andThen { case _ =>
-      getLastSkuID().foreach{
-        case Some(i) => SKU_AUTO_ID.set(i)
+      getLastProductID().foreach{
+        case Some(i) => PRODUCT_AUTO_ID.set(i)
       }
-      skuDAO.findAll[Sku].foreach { s =>
-        skus = s.map(x => x.id -> x).toMap
+      productDAO.findAll[Product].foreach { s =>
+        products = s.map(x => x.id -> x).toMap
       }
     }
   }
@@ -74,8 +74,8 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     itemDAO.getLastID
   }
 
-  override def getLastSkuID() = {
-    skuDAO.getLastID
+  override def getLastProductID() = {
+    productDAO.getLastID
   }
 
   override def addCategory(category: Category) = {
@@ -90,15 +90,15 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def addSku(sku: Sku) = {
-    skuDAO.save[Sku](sku).andThen{
-      case Success(s) => skus += s.id -> s
+  override def addProduct(product: Product) = {
+    productDAO.save(product).andThen{
+      case Success(s) => products += s.id -> s
     }
   }
 
-  override def addSkus(sku: IndexedSeq[Sku]) = {
-    Future.sequence(sku.map{ s =>
-      addSku(s)
+  override def addProducts(products: IndexedSeq[Product]) = {
+    Future.sequence(products.map{ s =>
+      addProduct(s)
     })
   }
 
@@ -110,8 +110,8 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     itemDAO.addItems(data)
   }
 
-  override def addSkus(data: JsArray) = {
-    skuDAO.addSkus(data)
+  override def addProducts(data: JsArray) = {
+    productDAO.addProducts(data)
   }
 
   override def findItem(item: Int) = {
@@ -126,16 +126,16 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     commentDAO.find[Comment](comment)
   }
 
-  override def findComment(item: Option[Int], sku: Option[Int]) = {
-    commentDAO.findComment(item, sku)
+  override def findComment(item: Option[Int], product: Option[Int]) = {
+    commentDAO.findComment(item, product)
   }
 
-  override def findSku(sku: Int) = {
-    skuDAO.find[Sku](sku)
+  override def findProduct(product: Int) = {
+    productDAO.find[Product](product)
   }
 
-  override def findSkusByItem(item: Int) = {
-    skuDAO.findSkusByItem(item)
+  override def findProductsByItem(item: Int) = {
+    productDAO.findProductsByItem(item)
   }
 
   override def removeCategory(category: Int) = {
@@ -150,9 +150,9 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def removeSku(sku: Int) = {
-    skuDAO.remove[BSONDocument, Sku](BSONDocument("id" -> sku)).andThen{
-      case Success(x) => x.foreach(s => skus -= s.id)
+  override def removeProduct(product: Int) = {
+    productDAO.remove[BSONDocument, Product](BSONDocument("id" -> product)).andThen{
+      case Success(x) => x.foreach(s => products -= s.id)
     }
   }
 
@@ -169,9 +169,9 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def updateSku(selector: BSONDocument, sku: Sku) = {
-    skuDAO.update(selector, sku).andThen{
-      case Success(_) => skus += sku.id -> sku
+  override def updateProduct(selector: BSONDocument, product: Product) = {
+    productDAO.update(selector, product).andThen{
+      case Success(_) => products += product.id -> product
     }
   }
 
@@ -189,10 +189,10 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def updateItemSku(sku: Int, id: Int) = {
-    Future.sequence(items.values.filter(_.sku.contains(sku)).toSeq.map { p =>
+  override def updateItemProduct(product: Int, id: Int) = {
+    Future.sequence(items.values.filter(_.product.contains(product)).toSeq.map { p =>
       updateItem(BSONDocument("id" -> p.id),
-        p.copy(sku = p.sku.updated(p.sku.indexOf(sku), id)))
+        p.copy(product = p.product.updated(p.product.indexOf(product), id)))
     })
   }
 
@@ -210,8 +210,8 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
 //    productDAO.findAll[Product]
   }
 
-  override def querySkus() = {
-    skuDAO.findAll[Sku]
+  override def queryProducts() = {
+    productDAO.findAll[Product]
   }
 
   override def queryComments() = {

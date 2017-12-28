@@ -49,7 +49,7 @@ class BaseModule extends AbstractModule with ScalaModule {
     bind[ItemDAO].to[ItemDAOImpl]
     bind[CategoryDAO].to[CategoryDAOImpl]
     bind[CommentDAO].to[CommentDAOImpl]
-    bind[SkuDAO].to[SkuDAOImpl]
+    bind[ProductDAO].to[ProductDAOImpl]
     bind[ReceiptDAO].to[ReceiptDAOImpl]
     bind[ReceiptTemplateDAO].to[ReceiptTemplateDAOImpl]
     bind[QuestionDAO].to[QuestionDAOImpl]

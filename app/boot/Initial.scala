@@ -41,7 +41,7 @@ class Initial @Inject()(autoIncDao: AutoIncDAO,
         (json \ "collection").as[String] match {
           case "menu" => menuService.init(data)
           case "article" => articleService.init(data)
-          case "sku" => productService.initSku(data)
+          case "product" => productService.initProduct(data)
           case "category" => productService.initCategory(data)
           case "item" => productService.initItem(data)
           case "receipt_template" => mwsService.initReceiptTemplate(data)

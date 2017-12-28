@@ -229,7 +229,7 @@
         "name": "IPad保护壳",
         "desc": "IPad保护壳",
         "category": [1, 3],
-        "sku": [1, 2],
+        "product": [1, 2],
         "amazonLink": ""
       },
       {
@@ -237,7 +237,7 @@
         "name": "IPad支架",
         "desc": "IPad支架",
         "category": [1, 3],
-        "sku": [3],
+        "product": [3],
         "amazonLink": ""
       },
       {
@@ -245,7 +245,7 @@
         "name": "运动腰包",
         "desc": "运动腰包",
         "category": [4, 5],
-        "sku": [4, 5],
+        "product": [4, 5],
         "amazonLink": ""
       },
       {
@@ -253,13 +253,13 @@
         "name": "运动臂带",
         "desc": "运动臂带",
         "category": [4, 6],
-        "sku": [6],
+        "product": [6],
         "amazonLink": ""
       }
     ]
   },
   {
-    "collection": "sku",
+    "collection": "product",
     "data": [
       {
         "id": 1,

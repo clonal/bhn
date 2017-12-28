@@ -7,7 +7,7 @@ import org.joda.time.format.DateTimeFormat
 import play.api.libs.json._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
-case class Comment(id: Int, item: Int, sku: Int, author: Int,
+case class Comment(id: Int, item: Int, product: Int, author: Int,
                    title: String, content: String, star: Double, date: DateTime)
 
 object Comment {
@@ -17,7 +17,7 @@ object Comment {
       val opt: Option[Comment] = for {
         id <- bson.getAs[Int]("id")
         item <- bson.getAs[Int]("item")
-        sku <- bson.getAs[Int]("sku")
+        product <- bson.getAs[Int]("product")
         author <- bson.getAs[Int]("author")
         title <- bson.getAs[String]("title")
         content <- bson.getAs[String]("content")
@@ -25,7 +25,7 @@ object Comment {
         date <- bson.getAs[String]("date")
       } yield {
 
-        new Comment(id, item, sku, author, title, content, star,
+        new Comment(id, item, product, author, title, content, star,
           DateTime.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")))
       }
       opt.get
@@ -36,7 +36,7 @@ object Comment {
     def write(comment: Comment): BSONDocument =
       BSONDocument("id" -> comment.id,
         "item" -> comment.item,
-        "sku" -> comment.sku,
+        "product" -> comment.product,
         "author" -> comment.author,
         "title" -> comment.title,
         "content" -> comment.content,

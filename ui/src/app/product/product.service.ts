@@ -102,7 +102,7 @@ export class ProductService {
 
     getProduct(id: string | any): Observable<Product> {
         let str = id == null ? '' : id;
-        return this.client.get('/api/product/findProduct/' + str)
+        return this.client.get('/api/product/findItem/' + str)
             .map(result => {
                 if (result) {
                     if (result['error']) {

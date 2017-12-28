@@ -2,7 +2,7 @@ package dal
 
 import javax.inject.Inject
 
-import models.Sku
+import models.Product
 import play.api.libs.json.{JsArray, JsObject}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.collections.bson.BSONCollection
@@ -11,22 +11,23 @@ import reactivemongo.play.json._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SkuDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: ReactiveMongoApi) extends SkuDAO{
-  override def collection: Future[BSONCollection] = reactiveMongoApi.database.map(_.collection("sku"))
+class ProductDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: ReactiveMongoApi) extends ProductDAO{
+  override def collection: Future[BSONCollection] = reactiveMongoApi.database.map(_.collection("product"))
 
 
-  override def findSkusByItem(item: Int) = {
-    collection.flatMap(_.find(BSONDocument("item" -> item)).cursor[Sku].collect[List]())
+  override def findProductsByItem(item: Int) = {
+    collection.flatMap(_.find(BSONDocument("item" -> item)).cursor[Product].collect[List]())
   }
 
-  override def addSkus(data: JsArray) = {
-    val f = for(sku <- data.value) yield {
-      addSku(sku.as[JsObject])
+  override def addProducts(data: JsArray) = {
+    val f = for(product <- data.value) yield {
+      save(product.as[Product])
+//      addProduct(sku.as[JsObject])
     }
     Future.sequence(f)
   }
 
-  override def addSku(sku: JsObject) = {
+  /*override def addProduct(sku: JsObject) = {
     collection.flatMap(_.insert(sku)).map{ _ =>
       new Sku(
         (sku \ "id").as[Int],
@@ -42,5 +43,5 @@ class SkuDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Rea
         (sku \ "show").as[Int],
         (sku \ "images").as[Map[String, String]]
       )}
-  }
+  }*/
 }

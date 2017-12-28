@@ -66,7 +66,7 @@ POST    /api/product/addCategoryBanner                    controllers.product.Pr
 POST    /api/product/removeCategory/:category             controllers.product.ProductController.removeCategory(category: Int)
 GET     /api/product/listComments                         controllers.product.ProductController.listComments
 GET     /api/product/findComment/:comment                 controllers.product.ProductController.commentDetail(comment: Int)
-GET     /api/product/findComment                          controllers.product.ProductController.findComment(item: Option[Int], sku: Option[Int])
+GET     /api/product/findComment                          controllers.product.ProductController.findComment(item: Option[Int], product: Option[Int])
 GET     /api/product/listItems                            controllers.product.ProductController.listItems
 GET     /api/product/findProduct/:item                    controllers.product.ProductController.findItem(item: Int)
 + nocsrf
@@ -75,15 +75,15 @@ POST    /api/product/addItem                              controllers.product.Pr
 POST    /api/product/editItem/:item                       controllers.product.ProductController.editItem(item: Int)
 + nocsrf
 POST    /api/product/removeItem/:item                     controllers.product.ProductController.removeItem(item: Int)
-GET     /api/product/listSkus                             controllers.product.ProductController.listSkus
-GET     /api/product/findSku/:sku                         controllers.product.ProductController.findSku(sku: Int)
-GET     /api/product/findSkusByItem/:item                 controllers.product.ProductController.findSkusByItem(item: Int)
+GET     /api/product/listProducts                         controllers.product.ProductController.listProducts
+GET     /api/product/findProduct/:product                 controllers.product.ProductController.findProduct(product: Int)
+GET     /api/product/findProductsByItem/:item             controllers.product.ProductController.findProductsByItem(item: Int)
 + nocsrf
-POST    /api/product/addSku/:item                         controllers.product.ProductController.addSku(item: Int)
+POST    /api/product/addProduct/:item                     controllers.product.ProductController.addProduct(item: Int)
 + nocsrf
-POST    /api/product/editSku                              controllers.product.ProductController.editSku
+POST    /api/product/editProduct                          controllers.product.ProductController.editProduct
 + nocsrf
-POST    /api/product/removeSku/:sku                       controllers.product.ProductController.removeSku(sku: Int)
+POST    /api/product/removeProduct/:product               controllers.product.ProductController.removeProduct(product: Int)
 
 + nocsrf
 POST    /api/mws/sendmails                                controllers.amazonWS.MWSController.sendMails(from: Option[String], to: Option[String], template: Option[Int])
@@ -100,9 +100,6 @@ POST    /api/question/editQuestion                        controllers.system.Que
 GET     /api/feedback/listFeedbacks                       controllers.system.FeedbackController.listFeedbacks
 + nocsrf
 POST    /api/feedback/deleteFeedback/:id                  controllers.system.FeedbackController.deleteFeedback(id: Int)
-
-
-
 
 #  end of all controllers APIs
 
