@@ -267,11 +267,16 @@ class MenuController  @Inject()(
     * @param menu
     * @return
     */
-  def showMenu(menu: Int) = Action.async{
+  def showMenu(menu: Option[Int]) = Action.async{
     implicit request =>
-      menuService.findMenu(menu).map{
-        case Some(m) => Ok(Json.obj("menu" -> Json.toJsObject(m)))
-        case None => BadRequest(Json.obj("error" -> "wrong menu"))
+      menu match {
+        case Some(id) =>
+          menuService.findMenu(id).map{
+            case Some(m) => Ok(Json.obj("menu" -> Json.toJsObject(m)))
+            case None => BadRequest(Json.obj("error" -> "wrong menu"))
+          }
+        case None =>
+          Future(Ok(Json.obj("info" -> "empty")))
       }
   }
 }

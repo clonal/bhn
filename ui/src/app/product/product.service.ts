@@ -26,17 +26,17 @@ export class ProductService {
     }
 
     initCategories() {
-        this.client.get('/api/item/listCategories').subscribe(result =>
+        this.client.get('/api/product/listCategories').subscribe(result =>
             this.categories = result as Category[]
         );
     }
 
     getCategory(id: string | any): Observable<Category> {
-        let str = id == null ? '' : id;
-        return this.client.get('/api/item/findCategory/' + str)
+        let str = id == null ? '' : '?category=' + id;
+        return this.client.get('/api/product/findCategory' + str)
             .map(result => {
                 if (result) {
-                    if (result['error']) {
+                    if (result['error'] || result['info']) {
                         return new Category(0, '', '', 0, '');
                     } else if (result['category']) {
                         return result['category'] as Category;
@@ -48,14 +48,14 @@ export class ProductService {
     }
 
     getTopCategories(): Observable<Category[]> {
-        return this.client.get('api/item/listTopCategories')
+        return this.client.get('api/product/listTopCategories')
             .map(result => {
                 return result as Category[];
             });
     }
 
     addCategory(category: Category, uploader: FileUploader) {
-        this.client.post('/api/item/addCategory', category).subscribe( result => {
+        this.client.post('/api/product/addCategory', category).subscribe( result => {
             let c = result as Category;
             let op = uploader.options;
             op.url = '/api/item/addCategoryBanner?category=' + c.id;
@@ -66,7 +66,7 @@ export class ProductService {
     }
 
     deleteCategory(id: number) {
-        this.client.post('/api/item/removeCategory/' + id, {}).subscribe(result => {
+        this.client.post('/api/product/removeCategory/' + id, {}).subscribe(result => {
            if (result['info']) {
                this.initCategories();
                alert(result['info']);
@@ -75,7 +75,7 @@ export class ProductService {
     }
 
     editCategory(category: Category, uploader: FileUploader) {
-        this.client.post('/api/item/editCategory', category).subscribe(result => {
+        this.client.post('/api/product/editCategory', category).subscribe(result => {
             if (result['info']) {
                 let op = uploader.options;
                 op.url = '/api/item/addCategoryBanner?category=' + category.id;
@@ -88,7 +88,7 @@ export class ProductService {
     }
 
     deleteItem(id: number) {
-        this.client.post('/api/item/removeItem/' + id, {})
+        this.client.post('/api/product/removeItem/' + id, {})
             .subscribe(result => {
                if (result['error']) {
                    alert(result['error']);
@@ -101,11 +101,11 @@ export class ProductService {
     }
 
     getItem(id: string | any): Observable<Item> {
-        let str = id == null ? '' : id;
-        return this.client.get('/api/item/findItem/' + str)
+        let str = id == null ? '' : '?item=' + id;
+        return this.client.get('/api/product/findItem' + str)
             .map(result => {
                 if (result) {
-                    if (result['error']) {
+                    if (result['error'] || result['info']) {
                         return new Item(0, '', '', [0], [0], '');
                     } else if (result['item']) {
                         return result['item'] as Item;

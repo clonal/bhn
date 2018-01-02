@@ -31,12 +31,18 @@ class QuestionController @Inject()(components: ControllerComponents,
       }
   }
 
-  def getQuestion(id: Int) = Action.async{
+  def getQuestion(question: Option[Int]) = Action.async{
     implicit request =>
-      questionService.findQuestion(id).map {
-        case Some(m) => Ok(Json.obj("question" -> Json.toJsObject(m)))
-        case None => BadRequest(Json.obj("error" -> "wrong question"))
+      question match {
+        case Some(id) =>
+          questionService.findQuestion(id).map {
+            case Some(m) => Ok(Json.obj("question" -> Json.toJsObject(m)))
+            case None => BadRequest(Json.obj("error" -> "wrong question"))
+          }
+        case None =>
+          Future(Ok(Json.obj("info" -> "empty")))
       }
+
   }
 
   def addQuestion = Action.async(parse.json) {

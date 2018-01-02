@@ -9,23 +9,21 @@ import {Banner} from './model/banner';
     templateUrl: 'backend.component.html'
 })
 
-export class BackendComponent implements OnInit{
+export class BackendComponent implements OnInit {
     menus: Menu[];
     banners: Banner[]; // 是否用map
-    selectedMenu: number = 1;
+    selectedMenu = 1;
     constructor(private logger: LoggerService, private backService: BackendService) {}
 
     ngOnInit(): void {
-        this.backService.getMenus().then(result =>
-            {this.menus = result; this.logger.debug('menus: ' + this.menus.length)}
+        this.backService.getMenus().subscribe(result => {
+            this.menus = result; this.logger.debug('menus: ' + this.menus.length)}
         );
-        this.backService.getBanners().then(result =>
-        {
+        this.backService.getBanners().subscribe(result => {
             this.banners = result;
             this.logger.debug('banners:' + this.banners.length + ', ' + this.banners[0]);
         }
         );
-        // this.selectedMenu = 1;
     }
 
     onSelect(menuId: number): void {
@@ -33,7 +31,6 @@ export class BackendComponent implements OnInit{
     }
 
     deleteImage(order: number): void {
-        // alert('order: ' + order + ', selected: ' + this.selectedMenu );
         this.backService.deleteRootBanner(order, this.selectedMenu).toPromise().then((result) => {
                 if (result) {
                     alert('deleteImage1 ' + result);

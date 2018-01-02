@@ -17,7 +17,7 @@ export class AboutUsService {
     }
 
     initMenus() {
-        this.backendService.getChildMenus(AboutUsMenu).then(result =>
+        this.backendService.getChildMenus(AboutUsMenu).subscribe(result =>
             this.menus = result
         );
     }

@@ -25,11 +25,16 @@ class ArticleController @Inject()(
     * @param article
     * @return
     */
-  def showArticle(article: Int) = Action.async {
+  def showArticle(article: Option[Int]) = Action.async {
     implicit request =>
-      articleService.findArticle(article).map{
-        case Some(a) => Ok(Json.obj("article" -> Json.toJsObject(a)))
-        case None => BadRequest(Json.obj("error" -> "wrong article"))
+      article match {
+        case Some(id) =>
+          articleService.findArticle(id).map{
+            case Some(a) => Ok(Json.obj("article" -> Json.toJsObject(a)))
+            case None => BadRequest(Json.obj("error" -> "wrong article"))
+          }
+        case _ =>
+          Future(Ok(Json.obj("info" -> "empty")))
       }
   }
 

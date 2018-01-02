@@ -38,11 +38,11 @@ POST   /api/menu/changeMenuOrder/:menu/:changeTo          controllers.system.Men
 POST   /api/menu/addMenu                                  controllers.system.MenuController.addMenu
 + nocsrf
 POST   /api/menu/removeMenu/:menu                         controllers.system.MenuController.removeMenu(menu: Int)
-GET    /api/menu/showMenu/:menu                           controllers.system.MenuController.showMenu(menu: Int)
+GET    /api/menu/showMenu                                 controllers.system.MenuController.showMenu(menu: Option[Int])
 + nocsrf
 POST   /api/menu/editMenu/:menu                           controllers.system.MenuController.editMenu(menu: Int)
 
-GET    /api/article/showArticle/:article                  controllers.system.ArticleController.showArticle(article: Int)
+GET    /api/article/showArticle                           controllers.system.ArticleController.showArticle(article: Option[Int])
 GET    /api/article/showArticle/listArticles/:menu        controllers.system.ArticleController.listArticles(menu: Int, asc: Option[Int], recursive: Option[Boolean])
 + nocsrf
 POST   /api/article/addArticle                            controllers.system.ArticleController.addArticle
@@ -54,7 +54,7 @@ GET    /api/article/removeArticle/:article                controllers.system.Art
 
 
 GET    /api/product/listCategories                        controllers.product.ProductController.listCategories
-GET    /api/product/findCategory/:category                controllers.product.ProductController.findCategory(category: Int)
+GET    /api/product/findCategory                          controllers.product.ProductController.findCategory(category: Option[Int])
 GET    /api/product/listTopCategories                     controllers.product.ProductController.listTopCategories
 + nocsrf
 POST    /api/product/addCategory                          controllers.product.ProductController.addCategory
@@ -68,7 +68,7 @@ GET     /api/product/listComments                         controllers.product.Pr
 GET     /api/product/findComment/:comment                 controllers.product.ProductController.commentDetail(comment: Int)
 GET     /api/product/findComment                          controllers.product.ProductController.findComment(item: Option[Int], product: Option[Int])
 GET     /api/product/listItems                            controllers.product.ProductController.listItems
-GET     /api/product/findProduct/:item                    controllers.product.ProductController.findItem(item: Int)
+GET     /api/product/findItem                             controllers.product.ProductController.findItem(item: Option[Int])
 + nocsrf
 POST    /api/product/addItem                              controllers.product.ProductController.addItem
 + nocsrf
@@ -91,7 +91,7 @@ POST    /api/mws/sendmails                                controllers.amazonWS.M
 GET     /api/question/listQuestions                       controllers.system.QuestionController.listQuestions
 + nocsrf
 POST    /api/question/deleteQuestion/:id                  controllers.system.QuestionController.deleteQuestion(id: Int)
-GET     /api/question/getQuestion/:id                     controllers.system.QuestionController.getQuestion(id: Int)
+GET     /api/question/getQuestion                         controllers.system.QuestionController.getQuestion(question: Option[Int])
 + nocsrf
 POST    /api/question/addQuestion                         controllers.system.QuestionController.addQuestion
 + nocsrf

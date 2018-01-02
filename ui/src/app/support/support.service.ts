@@ -46,11 +46,11 @@ export class SupportService {
     }
 
     getQuestion(id: string | any): Observable<Question> {
-        let str = id == null ? '' : id;
-        return this.client.get('/api/question/getQuestion/' + str)
+        let str = id == null ? '' : '?question=' + id;
+        return this.client.get('/api/question/getQuestion' + str)
             .map(result => {
                 if (result) {
-                    if (result['error']) {
+                    if (result['error'] || result['info']) {
                         return new Question(0, '', '');
                     } else if (result['question']) {
                         return result['question'] as Question;

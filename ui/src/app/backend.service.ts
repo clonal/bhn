@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Menu} from './model/menu';
 import {LoggerService} from './utils/logger.service';
-import {Http} from '@angular/http';
 import {Banner} from './model/banner';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
@@ -12,20 +11,19 @@ import {Item} from './model/item';
 export class BackendService {
 
     menus: Menu[];
-    constructor(private logger: LoggerService, private http: Http, private client: HttpClient) {}
+    constructor(private logger: LoggerService, private client: HttpClient) {}
 
     initMenus(): void {
-        this.getMenus().then(result => {
+        this.getMenus().subscribe(result => {
                 this.menus = result; this.logger.debug('menus: ' + this.menus.length);
             }
         );
     }
 
-    getBanners(): Promise<Banner[]> {
-        return this.http.get('/api/menu/showMenu/1')
-            .toPromise()
-            .then( response => {
-                    let banner = response.json().banner as Map<string, string>;
+    getBanners(): Observable<Banner[]> {
+        return this.client.get('/api/menu/showMenu/1')
+            .map( (response) => {
+                    let banner = response['banner'] as Map<string, string>;
                     let banners = [];
                     for (let key in banner) {
                         if (key) {
@@ -37,20 +35,18 @@ export class BackendService {
             );
     }
 
-    getMenus(): Promise<Menu[]> {
-        return this.http.get('/api/menu/listMenus')
-            .toPromise()
-            .then(response =>
-                response.json() as Menu[]
-            );
+    getMenus(): Observable<Menu[]> {
+        return this.client.get('/api/menu/listMenus')
+            .map((response) => {
+                return response as Menu[]
+            });
     }
 
-    getChildMenus(root: number): Promise<Menu[]> {
-        return this.http.get('/api/menu/findChildrenOfMenu/' + root)
-            .toPromise()
-            .then(response =>
-                response.json() as Menu[]
-            );
+    getChildMenus(root: number): Observable<Menu[]> {
+        return this.client.get('/api/menu/findChildrenOfMenu/' + root)
+            .map( (response) => {
+                return response as Menu[];
+            });
     }
 
     deleteRootBanner(order: number, selectedMenu: number): Observable<boolean> {
@@ -155,10 +151,10 @@ export class BackendService {
     }
 
     getMenu(id: string | any): Observable<Menu> {
-        let str = id == null ? '' : id;
-        return this.client.get('/api/menu/showMenu/' + str).map((result) => {
+        let str = id == null ? '' : '?menu=' + id;
+        return this.client.get('/api/menu/showMenu' + str).map((result) => {
             if (result) {
-                if (result['error']) {
+                if (result['error'] || result['info']) {
                     return new Menu(0, '', 0, 0, '', '', {}, []);
                 } else if (result['menu']) {
                     return result['menu'] as Menu;
@@ -192,11 +188,11 @@ export class BackendService {
     }
 
     getArticle(id: string | any): Observable<Article> {
-        let str = id == null ? '' : id;
-        return this.client.get('/api/article/showArticle/' + str)
+        let str = id == null ? '' : '?article=' + id;
+        return this.client.get('/api/article/showArticle' + str)
             .map((result) => {
                 if (result) {
-                    if (result['error']) {
+                    if (result['error'] || result['info']) {
                         return new Article(0, 0, '', '', '', 0, '');
                     } else if (result['article']) {
                         return result['article'] as Article;
@@ -233,7 +229,7 @@ export class BackendService {
     }
 
     getItems(): Observable<Item[]> {
-        return this.client.get('/api/item/listItems')
+        return this.client.get('/api/product/listItems')
             .map((data) => {
                 return data as Item[];
             });

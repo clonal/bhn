@@ -26,7 +26,7 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     items.get(item)
   }
 
-  override def initProduct(data: JsArray): Unit = {
+  override def initProduct(data: JsArray) = {
     productDAO.isEmpty.flatMap{
       case true => addProducts(data)
     } andThen { case _ =>
@@ -39,7 +39,7 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def initCategory(data: JsArray): Unit = {
+  override def initCategory(data: JsArray) = {
     categoryDAO.isEmpty.flatMap{
       case true => addCategories(data)
     } andThen { case _ =>
@@ -53,7 +53,7 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def initItem(data: JsArray): Unit = {
+  override def initItem(data: JsArray) = {
     itemDAO.isEmpty.flatMap{
       case true => addItems(data)
     } andThen { case _ =>
@@ -115,7 +115,11 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
   }
 
   override def findItem(item: Int) = {
-    itemDAO.find[Item](item)
+    if (items.isEmpty) {
+      itemDAO.find[Item](item)
+    } else {
+      Future(items.get(item))
+    }
   }
 
   override def findCategory(category: Int) = {

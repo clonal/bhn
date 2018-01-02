@@ -24,7 +24,6 @@ export class HomeComponent {
     constructor(private logger: LoggerService) {}
 
     ss(evt: ProgressEvent) {
-        alert(1);
         this.logger.debug('percent: ' + 100.0 * evt.loaded / evt.total);
     }
 

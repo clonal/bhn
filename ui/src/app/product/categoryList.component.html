@@ -1,8 +1,8 @@
 <div class="main">
     <ul *ngFor="let child of productService.categories">
-        <li><a [routerLink]="['/product/category', child.id]">{{child.name}}</a>
+        <li><a [routerLink]="['/item/category', child.id]">{{child.name}}</a>
             <span><button (click)="deleteCategory(child.id)" >删除</button>
-                &nbsp;&nbsp;<button [routerLink]="['/product/category', child.id]" >编辑</button>
+                &nbsp;&nbsp;<button [routerLink]="['/item/category', child.id]" >编辑</button>
             </span>
         </li>
     </ul>

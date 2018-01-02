@@ -95,11 +95,16 @@ class ProductController @Inject()(
   }
 
   //查找产品
-  def findItem(item: Int) = Action.async {
+  def findItem(item: Option[Int]) = Action.async {
     implicit request =>
-      productService.findItem(item).map{
-        case Some(c) => Ok(Json.obj("product" -> Json.toJsObject(c)))
-        case None => BadRequest(Json.obj("error" -> "wrong product"))
+      item match {
+        case Some(id) =>
+          productService.findItem(id).map{
+            case Some(c) => Ok(Json.obj("item" -> Json.toJsObject(c)))
+            case None => BadRequest(Json.obj("error" -> "wrong product"))
+          }
+        case _ =>
+          Future(Ok(Json.obj("info" -> "empty")))
       }
   }
 
@@ -260,11 +265,16 @@ class ProductController @Inject()(
   }
 
   //查找产品类型
-  def findCategory(category: Int) = Action.async {
+  def findCategory(category: Option[Int]) = Action.async {
     implicit request =>
-      productService.findCategory(category).map{
-        case Some(c) => Ok(Json.obj("category" -> Json.toJsObject(c)))
-        case None => BadRequest(Json.obj("error" -> "wrong menu"))
+      category match {
+        case Some(id) =>
+          productService.findCategory(id).map{
+            case Some(c) => Ok(Json.obj("category" -> Json.toJsObject(c)))
+            case None => BadRequest(Json.obj("error" -> "wrong menu"))
+          }
+        case None =>
+          Future(Ok(Json.obj("info" -> "empty")))
       }
   }
   //评论列表
