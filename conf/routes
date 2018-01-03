@@ -66,23 +66,15 @@ POST    /api/product/addCategoryBanner                    controllers.product.Pr
 POST    /api/product/removeCategory/:category             controllers.product.ProductController.removeCategory(category: Int)
 GET     /api/product/listComments                         controllers.product.ProductController.listComments
 GET     /api/product/findComment/:comment                 controllers.product.ProductController.commentDetail(comment: Int)
-GET     /api/product/findComment                          controllers.product.ProductController.findComment(item: Option[Int], product: Option[Int])
-GET     /api/product/listItems                            controllers.product.ProductController.listItems
-GET     /api/product/findItem                             controllers.product.ProductController.findItem(item: Option[Int])
-+ nocsrf
-POST    /api/product/addItem                              controllers.product.ProductController.addItem
-+ nocsrf
-POST    /api/product/editItem/:item                       controllers.product.ProductController.editItem(item: Int)
-+ nocsrf
-POST    /api/product/removeItem/:item                     controllers.product.ProductController.removeItem(item: Int)
+GET     /api/product/findComment                          controllers.product.ProductController.findComment(product: Option[Int])
 GET     /api/product/listProducts                         controllers.product.ProductController.listProducts
-GET     /api/product/findProduct/:product                 controllers.product.ProductController.findProduct(product: Int)
-GET     /api/product/findProductsByItem/:item             controllers.product.ProductController.findProductsByItem(item: Int)
+GET     /api/product/findProduct                          controllers.product.ProductController.findProduct(product: Option[Int])
+GET     /api/product/findProductsByParent/:parent         controllers.product.ProductController.findProductsByParent(parent: Int)
 + nocsrf
-POST    /api/product/addProduct/:item                     controllers.product.ProductController.addProduct(item: Int)
+POST    /api/product/addProduct                           controllers.product.ProductController.addProduct()
 + nocsrf
 POST    /api/product/editProduct                          controllers.product.ProductController.editProduct
-+ nocsrf
++ nocsrf`
 POST    /api/product/removeProduct/:product               controllers.product.ProductController.removeProduct(product: Int)
 
 + nocsrf

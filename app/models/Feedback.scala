@@ -13,7 +13,7 @@ case class Feedback(id: Int,
                     name: String,
                     email: String,
                     order: String,
-                    item: Int,
+                    product: Int,
                     suggest: String,
                     image: String,
                     date: DateTime,
@@ -47,12 +47,12 @@ object Feedback {
         name <- bson.getAs[String]("name")
         email <- bson.getAs[String]("email")
         order <- bson.getAs[String]("order")
-        item <- bson.getAs[Int]("item")
+        product <- bson.getAs[Int]("product")
         suggest <- bson.getAs[String]("suggest")
         image <- bson.getAs[String]("image")
         date <- bson.getAs[Date]("date")
         ip <- bson.getAs[String]("ip")
-      } yield new Feedback(id, category, market, name, email, order, item, suggest,
+      } yield new Feedback(id, category, market, name, email, order, product, suggest,
         image, new DateTime(date), ip)
       opt.get // the person is required (or let throw an exception)
     }
@@ -66,40 +66,12 @@ object Feedback {
         "name" -> feedback.name,
         "email" -> feedback.email,
         "order" -> feedback.order,
-        "item" -> feedback.item,
+        "product" -> feedback.product,
         "suggest" -> feedback.suggest,
         "image" -> feedback.image,
         "date" -> feedback.date.toDate,
         "ip" -> feedback.ip)
   }
-
-  /*implicit lazy val feedbackReads: Reads[Feedback] = (
-    (__ \ "id").read[Int] and
-    (__ \ "category").read[Int] and
-    (__ \ "market").read[Int] and
-    (__ \ "name").read[String] and
-    (__ \ "email").read[String] and
-    (__ \ "order").read[String] and
-    (__ \ "product").read[Int] and
-    (__ \ "suggest").read[String] and
-    (__ \ "image").read[String] and
-    (__ \ "date").read[String] and
-    (__ \ "ip").read[String]
-    )(Feedback.apply2 _)
-
-  implicit lazy val feedbackWrites: Writes[Feedback] = (
-      (__ \ "id").write[Int] and
-      (__ \ "category").write[Int] and
-      (__ \ "market").write[Int] and
-      (__ \ "name").write[String] and
-      (__ \ "email").write[String] and
-      (__ \ "order").write[String] and
-      (__ \ "product").write[Int] and
-      (__ \ "suggest").write[String] and
-      (__ \ "image").write[String] and
-      (__ \ "date").write[String] and
-      (__ \ "ip").write[String]
-    )(unlift(Feedback.unapply2))*/
 
   implicit val feedbackFormat: OFormat[Feedback] = Json.format[Feedback]
 }

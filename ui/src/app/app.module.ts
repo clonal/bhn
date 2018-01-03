@@ -48,7 +48,6 @@ export function jwtOptionsFactory(): any {
         BrowserAnimationsModule,
         FormsModule,
         HttpClientModule,
-        HttpModule,
         JwtModule.forRoot({
             jwtOptionsProvider: {
                 provide: JWT_OPTIONS,
@@ -60,8 +59,6 @@ export function jwtOptionsFactory(): any {
         SupportModule,
         ProductModule,
         AppRoutingModule
-        // GrowlModule,
-        // FileUploadModule
     ],
     providers: [
         AuthService,

@@ -11,7 +11,7 @@ export class TreeMenuComponent {
     // 超简单, 重点: 接收上级的值
     // 可以为树建立一个接口, 这里简化为any
     @Input() menus: Menu[];
-    @Input() prefix: string = '';
+    @Input() prefix = '';
     constructor(private backService: BackendService, private router: Router) {}
     itemClick(id: number, name: string) {
         // alert(this.backService.topRouter(name));

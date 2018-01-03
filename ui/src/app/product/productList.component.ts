@@ -2,13 +2,13 @@ import {Component} from '@angular/core';
 import {ProductService} from './product.service';
 
 @Component({
-    templateUrl: 'itemList.component.html'
+    templateUrl: 'productList.component.html'
 })
 
-export class ItemListComponent {
+export class ProductListComponent {
     constructor(private productService: ProductService) {}
 
-    deleteItem(id: number) {
-        this.productService.deleteItem(id);
+    deleteProduct(id: number) {
+        this.productService.deleteProduct(id)
     }
 }

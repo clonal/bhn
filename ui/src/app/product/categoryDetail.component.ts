@@ -15,7 +15,7 @@ export class CategoryDetailComponent implements OnInit {
     category$: Observable<Category>;
     selectedCategory: string;
     uploader: FileUploader = new FileUploader({
-        url: '/api/item/addCategoryBanner',
+        url: '/api/product/addCategoryBanner',
         method: 'POST'
     });
     constructor(private productService: ProductService,

@@ -5,7 +5,7 @@ import {Banner} from './model/banner';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {Article} from './model/article';
-import {Item} from './model/item';
+import {Product} from './model/product';
 
 @Injectable()
 export class BackendService {
@@ -74,7 +74,7 @@ export class BackendService {
                 src = '/support';
                 break;
             case 'productManager':
-                src = '/item';
+                src = '/product';
                 break;
         }
         return src;
@@ -228,10 +228,10 @@ export class BackendService {
             });
     }
 
-    getItems(): Observable<Item[]> {
-        return this.client.get('/api/product/listItems')
+    getProducts(): Observable<Product[]> {
+        return this.client.get('/api/product/listProducts')
             .map((data) => {
-                return data as Item[];
+                return data as Product[];
             });
     }
 }

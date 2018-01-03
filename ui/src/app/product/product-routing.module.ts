@@ -1,27 +1,28 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ProductNavComponent} from './productNav.component';
-import {ItemListComponent} from './itemList.component';
-import {ItemDetailComponent} from './itemDetail.component';
 import {CategoryListComponent} from './categoryList.component';
 import {CategoryDetailComponent} from './categoryDetail.component';
+import {ProductListComponent} from './productList.component';
+import {ProductDetailComponent} from './productDetail.component';
+
 
 const productRoutes: Routes = [
     {
-        path: 'item',
+        path: 'product',
         component: ProductNavComponent,
         children: [
             {
-                path: 'items',
-                component: ItemListComponent
+                path: 'products',
+                component: ProductListComponent
             },
             {
-                path: 'item/:id',
-                component: ItemDetailComponent
+                path: 'product/:id',
+                component: ProductDetailComponent
             },
             {
                 path: 'addItem',
-                component: ItemDetailComponent
+                component: ProductDetailComponent
             },
             {
                 path: 'categories',
@@ -37,7 +38,7 @@ const productRoutes: Routes = [
             },
             {
                 path: '',
-                component: ItemListComponent
+                component: ProductListComponent
             }
         ]
     }

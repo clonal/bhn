@@ -5,23 +5,23 @@ import {Observable} from 'rxjs/Observable';
 import {Category} from '../model/category';
 import {HttpClient} from '@angular/common/http';
 import {FileUploader} from 'ng2-file-upload';
-import {Item} from '../model/item';
+import {Product} from '../model/product';
 
 @Injectable()
 export class ProductService {
-    items: Item[];
+    products: Product[];
     categories: Category[];
 
     constructor(private backendService: BackendService,
                 private logger: LoggerService,
                 private client: HttpClient) {
-        this.initItems();
+        this.initProducts();
         this.initCategories();
     }
 
-    initItems() {
-        this.backendService.getItems().subscribe(result =>
-            this.items = result
+    initProducts() {
+        this.backendService.getProducts().subscribe(result =>
+            this.products = result
         );
     }
 
@@ -58,7 +58,7 @@ export class ProductService {
         this.client.post('/api/product/addCategory', category).subscribe( result => {
             let c = result as Category;
             let op = uploader.options;
-            op.url = '/api/item/addCategoryBanner?category=' + c.id;
+            op.url = '/api/product/addCategoryBanner?category=' + c.id;
             uploader.setOptions(op);
             uploader.uploadAll();
             this.initCategories();
@@ -78,7 +78,7 @@ export class ProductService {
         this.client.post('/api/product/editCategory', category).subscribe(result => {
             if (result['info']) {
                 let op = uploader.options;
-                op.url = '/api/item/addCategoryBanner?category=' + category.id;
+                op.url = '/api/product/addCategoryBanner?category=' + category.id;
                 uploader.setOptions(op);
                 uploader.uploadAll();
                 this.initCategories();
@@ -87,31 +87,33 @@ export class ProductService {
         });
     }
 
-    deleteItem(id: number) {
-        this.client.post('/api/product/removeItem/' + id, {})
+    deleteProduct(id: number) {
+        this.client.post('/api/product/removeProduct/' + id, {})
             .subscribe(result => {
                if (result['error']) {
                    alert(result['error']);
                }
                if (result['info']) {
-                   this.initItems();
+                   this.initProducts();
                    alert(result['info']);
                }
             });
     }
 
-    getItem(id: string | any): Observable<Item> {
-        let str = id == null ? '' : '?item=' + id;
-        return this.client.get('/api/product/findItem' + str)
+    getProduct(id: string | any): Observable<Product> {
+        let str = id == null ? '' : '?product=' + id;
+        return this.client.get('/api/product/findProduct' + str)
             .map(result => {
                 if (result) {
                     if (result['error'] || result['info']) {
-                        return new Item(0, '', '', [0], [0], '');
-                    } else if (result['item']) {
-                        return result['item'] as Item;
+                        return new Product(0, '', '', [], 0, [], '',
+                            0, 0, '', 0, 0, [], '');
+                    } else if (result['product']) {
+                        return result['product'] as Product;
                     }
                 } else {
-                    return new Item(0, '', '', [0], [0], '');
+                    return new Product(0, '', '', [], 0, [], '',
+                        0, 0, '', 0, 0, [], '');
                 }
             });
     }

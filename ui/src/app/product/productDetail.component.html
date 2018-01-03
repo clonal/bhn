@@ -1,0 +1,83 @@
+<div class="main" *ngIf="product$ | async as _product">
+    <div>
+        产品分类
+        <select [(ngModel)]="_product.category">
+            <option *ngFor="let category of productService.categories" [value]="category.id">{{category.name}}</option>
+        </select>
+    </div>
+
+    <div>
+        产品名称
+        <input [(ngModel)]="_product.name" type="text" />
+    </div>
+
+    <div>
+        sku
+        <input [(ngModel)]="_product.sku" type="text" />
+    </div>
+
+    <div>
+        产品描述
+        <textarea [(ngModel)]="_product.content"></textarea>
+    </div>
+
+    <div>
+        ASIN
+        <input [(ngModel)]="_product.asin" type="text" />
+    </div>
+
+    <div>
+        原价
+        <input [(ngModel)]="_product.price" type="text" />
+    </div>
+
+    <div>
+        销售价
+        <input [(ngModel)]="_product.sellPrice" type="text" />
+    </div>
+
+    <div>
+        库存
+        <input [(ngModel)]="_product.stock" type="text" />
+    </div>
+
+    <div>
+        是否展示:
+        <input [(ngModel)]="_product.show" type="checkbox" />
+    </div>
+
+    <div>
+        sku属性
+        <div *ngFor="let i of attr">
+            <label class="col-form-label">名字</label>
+            <input class="form-control" [(ngModel)]="i.name" value="{{i.name}}">
+            <label class="col-form-label">值</label>
+            <input class="form-control" [(ngModel)]="i.value" value="{{i.value}}">
+            <button class="btn btn-link" (click)="removeInput(i)">删除</button>
+        </div>
+        <button (click)="addInput()">增加</button>
+    </div>
+
+    <div>
+        sku图片:
+        <div *ngIf="_product.images['1']">
+            <img src='{{"../images/" + _product.images["1"]}}' width="200" height="50" />
+        </div>
+        <input type="file" ng2FileSelect [uploader]="uploader" />
+    </div>
+
+    <div>
+        amazon链接
+        <input [(ngModel)]="_product.link" type="text" />
+    </div>
+
+
+    <div *ngIf="selectedProduct; else editBlock">
+        <button (click)="edit(_item)">编辑</button>
+    </div>
+    <ng-template #editBlock>
+        <div>
+            <button (click)="submit(_item)">提交</button>
+        </div>
+    </ng-template>
+</div>

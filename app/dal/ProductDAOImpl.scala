@@ -15,8 +15,8 @@ class ProductDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi:
   override def collection: Future[BSONCollection] = reactiveMongoApi.database.map(_.collection("product"))
 
 
-  override def findProductsByItem(item: Int) = {
-    collection.flatMap(_.find(BSONDocument("item" -> item)).cursor[Product].collect[List]())
+  override def findProductsByParent(parent: Int) = {
+    collection.flatMap(_.find(BSONDocument("parent" -> parent)).cursor[Product].collect[List]())
   }
 
   override def addProducts(data: JsArray) = {

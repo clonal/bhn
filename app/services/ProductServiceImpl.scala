@@ -2,8 +2,8 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import dal.{CategoryDAO, CommentDAO, ItemDAO, ProductDAO}
-import models.{Category, Comment, Item, Product}
+import dal.{CategoryDAO, CommentDAO, ProductDAO}
+import models.{Category, Comment, Product}
 import play.api.libs.json.JsArray
 import reactivemongo.bson.BSONDocument
 
@@ -11,20 +11,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
 @Singleton
-class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
-                                    commentDAO: CommentDAO,
+class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
                                     categoryDAO: CategoryDAO,
                                     productDAO: ProductDAO )
                                    (implicit ex: ExecutionContext) extends ProductService{
 
-  final var items: Map[Int, Item] = Map.empty
   final var categories: Map[Int, Category] = Map.empty
   final var products: Map[Int, Product] = Map.empty
 
-
-  override def getItem(item: Int) = {
-    items.get(item)
-  }
 
   override def initProduct(data: JsArray) = {
     productDAO.isEmpty.flatMap{
@@ -53,25 +47,8 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def initItem(data: JsArray) = {
-    itemDAO.isEmpty.flatMap{
-      case true => addItems(data)
-    } andThen { case _ =>
-      getLastItemID().foreach{
-        case Some(i) => ITEM_AUTO_ID.set(i)
-      }
-      itemDAO.findAll[Item].foreach { p =>
-        items = p.map(x => x.id -> x).toMap
-      }
-    }
-  }
-
   override def getLastCategoryID() = {
     categoryDAO.getLastID
-  }
-
-  override def getLastItemID() = {
-    itemDAO.getLastID
   }
 
   override def getLastProductID() = {
@@ -81,12 +58,6 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
   override def addCategory(category: Category) = {
     categoryDAO.save[Category](category).andThen{
       case Success(c) => categories += c.id -> c
-    }
-  }
-
-  override def addItem(item: models.Item) = {
-    itemDAO.save[Item](item).andThen{
-      case Success(p) => items += p.id -> p
     }
   }
 
@@ -106,20 +77,9 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     categoryDAO.addCategories(data)
   }
 
-  override def addItems(data: JsArray) = {
-    itemDAO.addItems(data)
-  }
 
   override def addProducts(data: JsArray) = {
     productDAO.addProducts(data)
-  }
-
-  override def findItem(item: Int) = {
-    if (items.isEmpty) {
-      itemDAO.find[Item](item)
-    } else {
-      Future(items.get(item))
-    }
   }
 
   override def findCategory(category: Int) = {
@@ -130,16 +90,16 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     commentDAO.find[Comment](comment)
   }
 
-  override def findComment(item: Option[Int], product: Option[Int]) = {
-    commentDAO.findComment(item, product)
+  override def findComment(product: Option[Int]) = {
+    commentDAO.findComment(product)
   }
 
   override def findProduct(product: Int) = {
     productDAO.find[Product](product)
   }
 
-  override def findProductsByItem(item: Int) = {
-    productDAO.findProductsByItem(item)
+  override def findProductsByParent(parent: Int) = {
+    productDAO.findProductsByParent(parent)
   }
 
   override def removeCategory(category: Int) = {
@@ -148,22 +108,9 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def removeItem(item: Int) = {
-    itemDAO.remove[BSONDocument, Item](BSONDocument("id" -> item)).andThen{
-      case Success(x) => x.foreach(p => items -= p.id)
-    }
-  }
-
   override def removeProduct(product: Int) = {
     productDAO.remove[BSONDocument, Product](BSONDocument("id" -> product)).andThen{
       case Success(x) => x.foreach(s => products -= s.id)
-    }
-  }
-
-
-  override def updateItem(selector: BSONDocument, item: Item) = {
-    itemDAO.update(selector, item).andThen{
-      case Success(p) => items += item.id -> item
     }
   }
 
@@ -179,9 +126,9 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def updateItemCategory(category: Int, id: Int) = {
-    Future.sequence(items.values.filter(_.category.contains(category)).toSeq.map { p =>
-      updateItem(BSONDocument("id" -> p.id),
+  override def updateProductCategory(category: Int, id: Int) = {
+    Future.sequence(products.values.filter(_.category.contains(category)).toSeq.map { p =>
+      updateProduct(BSONDocument("id" -> p.id),
         p.copy(category = p.category.updated(p.category.indexOf(category), id)))
     })
   }
@@ -193,13 +140,6 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
     }
   }
 
-  override def updateItemProduct(product: Int, id: Int) = {
-    Future.sequence(items.values.filter(_.product.contains(product)).toSeq.map { p =>
-      updateItem(BSONDocument("id" -> p.id),
-        p.copy(product = p.product.updated(p.product.indexOf(product), id)))
-    })
-  }
-
   override def queryCategories() = {
 //    categoryDAO.findAll[Category]
     Future(categories.values.toSeq)
@@ -207,11 +147,6 @@ class ProductServiceImpl  @Inject()(itemDAO: ItemDAO,
 
   override def queryTopCategories() = {
     Future(categories.values.toSeq.filter(_.parent == 0))
-  }
-
-  override def queryItems() = {
-    Future(items.values.toList)
-//    productDAO.findAll[Item]
   }
 
   override def queryProducts() = {

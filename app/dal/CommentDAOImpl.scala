@@ -12,9 +12,8 @@ class CommentDAOImpl @Inject()(implicit ec: ExecutionContext,
                                 reactiveMongoApi: ReactiveMongoApi) extends CommentDAO{
   override def collection = reactiveMongoApi.database.map(_.collection("comment"))
 
-  override def findComment(item: Option[Int], product: Option[Int]) = {
-    val selector1 = item.map(x => BSONDocument("item" -> x)).getOrElse(BSONDocument())
+  override def findComment(product: Option[Int]) = {
     val selector2 = product.map(x => BSONDocument("product" -> x)).getOrElse(BSONDocument())
-    collection.flatMap(_.find(selector1 ++ selector2).cursor[Comment].collect[List]())
+    collection.flatMap(_.find(selector2).cursor[Comment].collect[List]())
   }
 }

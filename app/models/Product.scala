@@ -6,18 +6,19 @@ import reactivemongo.bson._
 
 import scala.collection.mutable.ArrayBuffer
 
-case class Product(id: Int, item: Int, name: String, sku: String,
-                   attributes: Array[Map[String, String]], content: String, price: Double,
-                   sellPrice: Double, asin: String, stock: Int, show: Int, images: Map[String, String])
+case class Product(id: Int, name: String, sku: String, category: Array[Int], parent: Int,
+                   attributes: Array[Map[String, String]], content: String, price: Double, sellPrice: Double,
+                   asin: String, stock: Int, show: Int, images: Map[String, String], link: String)
 
 object Product {
   implicit object ProductReader extends BSONDocumentReader[Product] {
     def read(bson: BSONDocument): Product = {
       val opt: Option[Product] = for {
         id <- bson.getAs[Int]("id")
-        item <- bson.getAs[Int]("item")
         name <- bson.getAs[String]("name")
         sku <- bson.getAs[String]("sku")
+        category <- bson.getAs[Array[Int]]("category")
+        parent <- bson.getAs[Int]("parent")
         attributes <- bson.getAs[BSONArray]("attributes")
         content <- bson.getAs[String]("content")
         price <- bson.getAs[Double]("price")
@@ -26,6 +27,7 @@ object Product {
         stock <- bson.getAs[Int]("stock")
         show <- bson.getAs[Int]("show")
         images <- bson.getAs[Map[String,String]]("images")
+        link <- bson.getAs[String]("link")
       } yield {
         val ab = ArrayBuffer.empty[Map[String, String]]
         attributes.values.foreach{
@@ -34,7 +36,8 @@ object Product {
         val attr = attributes.values.map {
           case b: BSONDocument => b.as[Map[String, String]]
         }
-        new Product(id, item, name, sku, attr.toArray, content, price, sellPrice, asin, stock, show, images)
+        new Product(id, name, sku, category, parent, attr.toArray,
+          content, price, sellPrice, asin, stock, show, images, link)
       }
       opt.get
     }
@@ -43,9 +46,10 @@ object Product {
   implicit object ProductWriter extends BSONDocumentWriter[Product] {
     def write(product: Product): BSONDocument =
       BSONDocument("id" -> product.id,
-        "item" -> product.item,
         "name" -> product.name,
         "sku" -> product.sku,
+        "category" -> product.category,
+        "parent" -> product.parent,
         "attributes" -> product.attributes,
         "content" -> product.content,
         "price" -> product.price,
@@ -53,7 +57,8 @@ object Product {
         "asin" -> product.asin,
         "stock" -> product.stock,
         "show" -> product.show,
-        "images" -> product.images)
+        "images" -> product.images,
+        "link" -> product.link)
   }
   implicit val productFormat: OFormat[Product] = Json.format[Product]
 }

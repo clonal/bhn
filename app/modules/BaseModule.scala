@@ -46,7 +46,6 @@ class BaseModule extends AbstractModule with ScalaModule {
     bind[AuthTokenDAO].to[AuthTokenDAOImpl]
     bind[MenuDAO].to[MenuDAOImpl]
     bind[ArticleDAO].to[ArticleDAOImpl]
-    bind[ItemDAO].to[ItemDAOImpl]
     bind[CategoryDAO].to[CategoryDAOImpl]
     bind[CommentDAO].to[CommentDAOImpl]
     bind[ProductDAO].to[ProductDAOImpl]

@@ -10,15 +10,15 @@ import {Banner} from './model/banner';
 })
 
 export class BackendComponent implements OnInit {
-    menus: Menu[];
+    // menus: Menu[];
     banners: Banner[]; // 是否用map
     selectedMenu = 1;
     constructor(private logger: LoggerService, private backService: BackendService) {}
 
     ngOnInit(): void {
-        this.backService.getMenus().subscribe(result => {
+/*        this.backService.getMenus().subscribe(result => {
             this.menus = result; this.logger.debug('menus: ' + this.menus.length)}
-        );
+        );*/
         this.backService.getBanners().subscribe(result => {
             this.banners = result;
             this.logger.debug('banners:' + this.banners.length + ', ' + this.banners[0]);

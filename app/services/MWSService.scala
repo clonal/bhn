@@ -2,11 +2,8 @@ package services
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import models.{Item, Receipt}
-import play.api.i18n.Messages
+import models.Receipt
 import play.api.libs.json.JsArray
-import play.api.libs.mailer.Email
-import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.Future
 
