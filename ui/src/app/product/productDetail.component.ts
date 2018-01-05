@@ -150,6 +150,9 @@ export class ProductDetailComponent implements OnInit, OnChanges {
 
     removeImage(spot) {
         let name = 'image' + spot;
-        // this.productForm.get('images').get(name).setValue('')
+        alert(name);
+        alert(this.productForm.get('images').get(name).value);
+        this.productForm.get('images').get(name).setValue('');
+        alert('22' + this.productForm.get('images').get(name).value);
     }
 }
