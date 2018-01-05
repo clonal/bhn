@@ -2,8 +2,8 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import dal.{CategoryDAO, CommentDAO, ProductDAO}
-import models.{Category, Comment, Product}
+import dal.{CategoryDAO, CommentDAO, DepartmentDAO, ProductDAO}
+import models.{Category, Comment, Department, Product}
 import play.api.libs.json.JsArray
 import reactivemongo.bson.BSONDocument
 
@@ -12,10 +12,12 @@ import scala.util.Success
 
 @Singleton
 class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
+                                    departmentDAO: DepartmentDAO,
                                     categoryDAO: CategoryDAO,
                                     productDAO: ProductDAO )
                                    (implicit ex: ExecutionContext) extends ProductService{
 
+  final var departments: Map[Int, Department] = Map.empty
   final var categories: Map[Int, Category] = Map.empty
   final var products: Map[Int, Product] = Map.empty
 
@@ -45,6 +47,24 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
         categories = c.map(x => x.id -> x).toMap
       }
     }
+  }
+
+  override def initDepartment(data: JsArray): Unit = {
+    departmentDAO.isEmpty.flatMap{
+      case true => addDepartments(data)
+    } andThen { case _ =>
+      getLastDepartmentID().foreach{
+        case Some(i) =>
+          DEPARTMENT_AUTO_ID.set(i)
+      }
+      departmentDAO.findAll[Department].foreach { d =>
+        departments = d.map(x => x.id -> x).toMap
+      }
+    }
+  }
+
+  override def getLastDepartmentID() = {
+    departmentDAO.getLastID
   }
 
   override def getLastCategoryID() = {
@@ -77,6 +97,15 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
     categoryDAO.addCategories(data)
   }
 
+  override def addDepartments(data: JsArray) = {
+    departmentDAO.addDepartments(data)
+  }
+
+  override def addDepartment(department: Department) = {
+    departmentDAO.save(department).andThen{
+      case Success(d) => departments += d.id -> d
+    }
+  }
 
   override def addProducts(data: JsArray) = {
     productDAO.addProducts(data)
@@ -84,6 +113,10 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
 
   override def findCategory(category: Int) = {
     categoryDAO.find[Category](category)
+  }
+
+  override def findDepartment(department: Int) = {
+    departmentDAO.find[Department](department)
   }
 
   override def findComment(comment: Int) = {
@@ -108,6 +141,12 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
     }
   }
 
+  override def removeDepartment(department: Int) = {
+    departmentDAO.remove[BSONDocument, Department](BSONDocument("id" -> department)).andThen{
+      case Success(x) => x.foreach(d => departments -= d.id)
+    }
+  }
+
   override def removeProduct(product: Int) = {
     productDAO.remove[BSONDocument, Product](BSONDocument("id" -> product)).andThen{
       case Success(x) => x.foreach(s => products -= s.id)
@@ -126,10 +165,16 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
     }
   }
 
+  override def updateDepartment(selector: BSONDocument, department: Department) = {
+    departmentDAO.update(selector, department).andThen{
+      case Success(_) => departments += department.id -> department
+    }
+  }
+
   override def updateProductCategory(category: Int, id: Int) = {
-    Future.sequence(products.values.filter(_.category.contains(category)).toSeq.map { p =>
+    Future.sequence(products.values.filter(_.category == category).toSeq.map { p =>
       updateProduct(BSONDocument("id" -> p.id),
-        p.copy(category = p.category.updated(p.category.indexOf(category), id)))
+        p.copy(category = id))
     })
   }
 
@@ -145,8 +190,12 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
     Future(categories.values.toSeq)
   }
 
+  override def queryDepartments() = {
+    Future(departments.values.toSeq)
+  }
+
   override def queryTopCategories() = {
-    Future(categories.values.toSeq.filter(_.parent == 0))
+    Future(categories.values.toSeq.filter(_.department == 0))
   }
 
   override def queryProducts() = {

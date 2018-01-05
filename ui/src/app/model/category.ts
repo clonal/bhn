@@ -2,15 +2,15 @@ export class Category {
     id: number;
     name: string;
     desc: string;
-    parent: number;
+    department: number;
     banner: string;
 
 
-    constructor(id: number, name: string, desc: string, parent: number, banner: string) {
+    constructor(id: number, name: string, desc: string, department: number, banner: string) {
         this.id = id;
         this.name = name;
         this.desc = desc;
-        this.parent = parent;
+        this.department = department;
         this.banner = banner;
     }
 }

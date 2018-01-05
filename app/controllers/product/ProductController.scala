@@ -5,7 +5,7 @@ import java.nio.file.Paths
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
-import models.{Category, Product}
+import models.{Category, Department, Product}
 import play.api.Configuration
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsArray, JsObject, Json}
@@ -34,10 +34,15 @@ class ProductController @Inject()(
             Map("key" -> key,"value" -> value)
           }
           val id = productService.PRODUCT_AUTO_ID.addAndGet(1)
+          val m11 = (jValue \ "images").get.asInstanceOf[JsObject].value
+          val m22 = m11.map { case (kk, vv) =>
+            (kk, vv.toString())
+          }
+
           val product = Product(id,
             (jValue \ "name").as[String],
             (jValue \ "sku").as[String],
-            (jValue \ "category").as[Array[Int]],
+            (jValue \ "category").as[Int],
             (jValue \ "parent").as[Int],
             attributes.toArray,
             (jValue \ "content").as[String],
@@ -45,8 +50,8 @@ class ProductController @Inject()(
             (jValue \ "sellPrice").as[Double],
             (jValue \ "asin").as[String],
             (jValue \ "stock").as[Int],
-            (jValue \ "show").as[Int],
-            (jValue \ "images").as[Map[String, String]],
+            (jValue \ "show").as[Boolean],
+            m22.toMap,
             (jValue \ "link").as[String]
           )
 
@@ -102,10 +107,18 @@ class ProductController @Inject()(
   // 添加产品类型
   def addCategory() = Action.async(parse.json) {
     implicit request =>
-      val id = productService.CATEGORY_AUTO_ID.addAndGet(1)
+      val id = productService.CATEGORY_AUTO_ID.incrementAndGet()
       val jsObject = request.body.as[JsObject] ++ Json.obj("id" -> id)
       productService.addCategory(jsObject.as[Category]).map(m => Ok(Json.toJsObject(m)))
   }
+
+  def addDepartment() = Action.async(parse.json) {
+    implicit request =>
+      val id = productService.DEPARTMENT_AUTO_ID.incrementAndGet()
+      val jsObject = request.body.as[JsObject] ++ Json.obj("id" -> id)
+      productService.addDepartment(jsObject.as[Department]).map(m => Ok(Json.toJsObject(m)))
+  }
+
   //删除产品类型
   def removeCategory(category: Int) = Action.async {
     implicit request =>
@@ -169,6 +182,13 @@ class ProductController @Inject()(
       }
   }
 
+  def listDepartments() = Action.async {
+    implicit request =>
+      productService.queryDepartments().map{ list =>
+        Ok(JsArray(list.map(x => Json.toJsObject(x))))
+      }
+  }
+
   def listTopCategories() = Action.async {
     implicit request =>
       productService.queryTopCategories().map { list =>
@@ -184,6 +204,20 @@ class ProductController @Inject()(
           productService.findCategory(id).map{
             case Some(c) => Ok(Json.obj("category" -> Json.toJsObject(c)))
             case None => BadRequest(Json.obj("error" -> "wrong menu"))
+          }
+        case None =>
+          Future(Ok(Json.obj("info" -> "empty")))
+      }
+  }
+
+  //查找产品类型
+  def findDepartment(department: Option[Int]) = Action.async {
+    implicit request =>
+      department match {
+        case Some(id) =>
+          productService.findDepartment(id).map{
+            case Some(c) => Ok(Json.obj("department" -> Json.toJsObject(c)))
+            case None => BadRequest(Json.obj("error" -> "wrong department"))
           }
         case None =>
           Future(Ok(Json.obj("info" -> "empty")))

@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {ProductRoutingModule} from './product-routing.module';
 import {FileUploadModule} from 'ng2-file-upload';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {ProductService} from './product.service';
 import {ProductComponent} from './product.component';
@@ -18,6 +18,7 @@ import {ProductListComponent} from './productList.component';
         FormsModule,
         FileUploadModule,
         ProductRoutingModule,
+        ReactiveFormsModule,
     ],
     declarations: [
         ProductComponent,

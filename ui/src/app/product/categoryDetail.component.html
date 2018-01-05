@@ -1,35 +1,42 @@
-<div class="main" *ngIf="category$ | async as _category">
-
-    <div>
-        父级分类
-        <category-selector [chosen]="_category.parent"
-                           (chosenChange)="chosenChanged($event, _category)"></category-selector>
+<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-group radio">
+        <h4>类别类型:</h4>
+        <label class="center-block"><input type="radio" formControlName="type" value="department">一级分类</label>
+        <label class="center-block"><input type="radio" formControlName="type" value="category">二级分类</label>
     </div>
 
-    <div>
-        分类名称
-        <input type="text" [(ngModel)]="_category.name"/>
+    <div class="form-group">
+        <label class="center-block">名字:
+            <input class="form-control" formControlName="name">
+        </label>
     </div>
 
-    <div>
-        简要描述
-        <textarea [(ngModel)]="_category.desc"></textarea>
+    <div class="form-group">
+        <label class="center-block">描述:
+            <textarea class="form-control" formControlName="desc"></textarea>
+        </label>
     </div>
 
-    <div>
-        BANNER展示图
-        <div *ngIf="_category.banner">
-            <img src='{{"../images/" + _category.banner}}' width="200" height="50" />
+    <div *ngIf="categoryForm.get('type').value=='category'">
+        <div class="form-group">
+            <label class="center-block">一级分类:
+                <select class="form-control" formControlName="department">
+                    <option *ngFor="let d of productService.departments" [value]="d.id">{{d.name}}</option>
+                </select>
+            </label>
         </div>
-        <input type="file" ng2FileSelect [uploader]="uploader" options=""/>
+
+        <div class="form-group">
+            <label class="center-block">banner图:
+                <img src="{{'../images/' + banner}}"/>
+            </label>
+        </div>
     </div>
 
-    <div *ngIf="selectedCategory; else editBlock">
-        <button (click)="edit(_category)">编辑</button>
+    <div style="margin-bottom: 1em">
+        <button type="submit"
+                [disabled]="categoryForm.pristine" class="btn btn-success">Save</button> &nbsp;
+        <button type="reset" (click)="revert()"
+                [disabled]="categoryForm.pristine" class="btn btn-danger">Revert</button>
     </div>
-    <ng-template #editBlock>
-        <div>
-            <button (click)="submit(_category)">提交</button>
-        </div>
-    </ng-template>
-</div>
+</form>

@@ -22,7 +22,6 @@ class MenuServiceImpl @Inject()(dao: MenuDAO)
       getLastID().foreach{
         case Some(i) =>
           MENU_AUTO_ID.set(i)
-          println(s"value2: $MENU_AUTO_ID")
       }
     }
   }

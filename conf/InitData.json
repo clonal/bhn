@@ -175,48 +175,49 @@
     ]
   },
   {
-    "collection": "category",
+    "collection": "department",
     "data": [
       {
         "id": 1,
         "name": "电脑",
-        "desc": "电脑",
-        "parent": 0,
+        "desc": "电脑"
+      },
+      {
+        "id": 2,
+        "name": "运动户外",
+        "desc": "运动户外"
+      }
+    ]
+  },
+  {
+    "collection": "category",
+    "data": [
+      {
+        "id": 1,
+        "name": "平板电脑配件",
+        "desc": "平板电脑配件",
+        "department": 1,
         "banner" : ""
       },
       {
         "id": 2,
-        "name": "平板电脑配件",
-        "desc": "平板电脑配件",
-        "parent": 1,
+        "name": "外设产品",
+        "desc": "外设产品",
+        "department": 1,
         "banner" : ""
       },
       {
         "id": 3,
-        "name": "外设产品",
-        "desc": "外设产品",
-        "parent": 1,
+        "name": "腰包",
+        "desc": "腰包",
+        "department": 2,
         "banner" : ""
       },
       {
         "id": 4,
-        "name": "运动户外",
-        "desc": "运动户外",
-        "parent": 0,
-        "banner" : ""
-      },
-      {
-        "id": 5,
-        "name": "腰包",
-        "desc": "腰包",
-        "parent": 4,
-        "banner" : ""
-      },
-      {
-        "id": 6,
         "name": "臂带",
         "desc": "臂带",
-        "parent": 4,
+        "department": 2,
         "banner" : ""
       }
     ]
@@ -228,7 +229,7 @@
         "id": 1,
         "sku": "red 10.5inch",
         "name": "红色10.5寸IPad保护壳",
-        "category": [1, 3],
+        "category": 2,
         "parent": 0,
         "attributes": [
           {
@@ -245,7 +246,7 @@
         "sellPrice": 19.9,
         "asin": "a1",
         "stock": 99,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -253,7 +254,7 @@
         "id": 2,
         "sku": "red 10.5inch",
         "name": "红色10.5寸IPad保护壳",
-        "category": [1, 3],
+        "category": 2,
         "parent": 2,
         "attributes": [
           {
@@ -270,7 +271,7 @@
         "sellPrice": 19.9,
         "asin": "a1",
         "stock": 99,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -278,7 +279,7 @@
         "id": 3,
         "sku": "white 10.5inch",
         "name": "白色10.5寸IPad保护壳",
-        "category": [1, 3],
+        "category": 2,
         "parent": 2,
         "attributes": [
           {
@@ -295,7 +296,7 @@
         "sellPrice": 19.9,
         "asin": "a1a",
         "stock": 99,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -303,7 +304,7 @@
         "id": 4,
         "sku": "red1 10.5inch",
         "name": "IPad支架",
-        "category": [1, 3],
+        "category": 2,
         "parent": 0,
         "attributes": [
           {
@@ -316,7 +317,7 @@
         "sellPrice": 6.9,
         "asin": "a2",
         "stock": 33,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -324,7 +325,7 @@
         "id": 5,
         "sku": "red1 10.5inch",
         "name": "IPad支架",
-        "category": [1, 3],
+        "category": 2,
         "parent": 4,
         "attributes": [
           {
@@ -337,7 +338,7 @@
         "sellPrice": 6.9,
         "asin": "a2",
         "stock": 33,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -345,7 +346,7 @@
         "id": 6,
         "sku": "black 10.5inch",
         "name": "黑色运动腰包",
-        "category": [4, 5],
+        "category": 3,
         "parent": 0,
         "attributes": [
           {
@@ -358,7 +359,7 @@
         "sellPrice": 6.9,
         "asin": "a3",
         "stock": 2,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -366,7 +367,7 @@
         "id": 7,
         "sku": "black 10.5inch",
         "name": "黑色运动腰包",
-        "category": [4, 5],
+        "category": 3,
         "parent": 6,
         "attributes": [
           {
@@ -379,7 +380,7 @@
         "sellPrice": 6.9,
         "asin": "a3",
         "stock": 2,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -400,7 +401,7 @@
         "sellPrice": 6.9,
         "asin": "a4",
         "stock": 1,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -421,7 +422,7 @@
         "sellPrice": 6.9,
         "asin": "a6",
         "stock": 0,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       },
@@ -442,7 +443,7 @@
         "sellPrice": 6.9,
         "asin": "a6",
         "stock": 0,
-        "show": 1,
+        "show": true,
         "images": {"1": ""},
         "link": ""
       }

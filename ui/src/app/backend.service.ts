@@ -140,7 +140,7 @@ export class BackendService {
                 if (id) {
                     let menu = new Menu(id, result['name'], result['order'], result['parent'],
                         result['content'], result['desc'], {}, []);
-                    // this.addChild(this.menus[0], result['parent'], menu);
+                    // this.addChild(this.menus[0], result['department'], menu);
                     this.initMenus();
                     return menu;
                 } else {

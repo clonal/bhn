@@ -1,83 +1,116 @@
-<div class="main" *ngIf="product$ | async as _product">
-    <div>
-        产品分类
-        <select [(ngModel)]="_product.category">
-            <option *ngFor="let category of productService.categories" [value]="category.id">{{category.name}}</option>
-        </select>
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-group">
+        <label class="center-block">名字:
+            <input class="form-control" formControlName="name">
+        </label>
     </div>
 
-    <div>
-        产品名称
-        <input [(ngModel)]="_product.name" type="text" />
+    <div class="form-group">
+        <label class="center-block">分类:
+            <select class="form-control" formControlName="category">
+                <option *ngFor="let cate of productService.categories" [value]="cate.id">{{cate.name}}</option>
+            </select>
+        </label>
     </div>
 
-    <div>
-        sku
-        <input [(ngModel)]="_product.sku" type="text" />
+    <div class="form-group">
+        <label class="center-block">sku:
+            <input class="form-control" formControlName="sku">
+        </label>
     </div>
 
-    <div>
-        产品描述
-        <textarea [(ngModel)]="_product.content"></textarea>
+    <div class="form-group">
+        <label class="center-block">描述:
+            <textarea class="form-control" formControlName="content"></textarea>
+        </label>
     </div>
 
-    <div>
-        ASIN
-        <input [(ngModel)]="_product.asin" type="text" />
+    <div class="form-group">
+        <label class="center-block">asin:
+            <input class="form-control" formControlName="asin">
+        </label>
     </div>
 
-    <div>
-        原价
-        <input [(ngModel)]="_product.price" type="text" />
+    <div class="form-group">
+        <label class="center-block">原价:
+            <input class="form-control" formControlName="price">
+        </label>
     </div>
 
-    <div>
-        销售价
-        <input [(ngModel)]="_product.sellPrice" type="text" />
+    <div class="form-group">
+        <label class="center-block">售价:
+            <input class="form-control" formControlName="sellPrice">
+        </label>
     </div>
 
-    <div>
-        库存
-        <input [(ngModel)]="_product.stock" type="text" />
+    <div class="form-group">
+        <label class="center-block">库存:
+            <input class="form-control" formControlName="sellPrice">
+        </label>
     </div>
 
-    <div>
-        是否展示:
-        <input [(ngModel)]="_product.show" type="checkbox" />
+    <div class="checkbox">
+        <label class="center-block">
+            <input type="checkbox" formControlName="show">展示商品
+        </label>
     </div>
 
-    <div>
-        sku属性
-        <div *ngFor="let i of attr">
-            <label class="col-form-label">名字</label>
-            <input class="form-control" [(ngModel)]="i.name" value="{{i.name}}">
-            <label class="col-form-label">值</label>
-            <input class="form-control" [(ngModel)]="i.value" value="{{i.value}}">
-            <button class="btn btn-link" (click)="removeInput(i)">删除</button>
+    <div class="form-group">
+        <label class="center-block">商品链接:
+            <input class="form-control" formControlName="link">
+        </label>
+    </div>
+
+    <div formArrayName="attributes" class="well well-lg">
+        <div *ngFor="let attribute of attributes.controls; let i=index" [formGroupName]="i" >
+            <!-- The repeated address template -->
+            <h4>属性 #{{i + 1}}</h4>
+            <div style="margin-left: 1em;">
+                <div class="form-group">
+                    <label class="center- block">属性名:
+                        <input class="form-control" formControlName="key">
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="center-block">属性值:
+                        <input class="form-control" formControlName="value">
+                    </label>
+                </div>
+            </div>
+            <br>
+            <!-- End of the repeated address template -->
         </div>
-        <button (click)="addInput()">增加</button>
+        <button (click)="addAttribute()" type="button">添加属性</button>
     </div>
 
     <div>
-        sku图片:
-        <div *ngIf="_product.images['1']">
-            <img src='{{"../images/" + _product.images["1"]}}' width="200" height="50" />
-        </div>
-        <input type="file" ng2FileSelect [uploader]="uploader" />
+        <label>产品展示图:
+            <div formGroupName="images" >
+                <!--                <input  type="hidden" formControlName="image1" />
+                                <input  type="hidden" formControlName="image2" />
+                                <input  type="hidden" formControlName="image3" />
+                                <input  type="hidden" formControlName="image4" />-->
+                <div *ngFor="let spot of imageSpots">
+                    <input #imageUrl type="hidden" formControlName="{{'image' + spot}}" />
+                    <div *ngIf="imageUrl.value != ''">
+                        <img src='{{"../images/" + imageUrl.value}}' width="200" height="50" />
+                        <button (click)="removeImage(spot)">移除图片{{spot}}</button>
+                    </div>
+                    <div *ngIf="imageUrl.value === ''">
+                        <button (click)="uploadImage(upbt, imageUrl.value, spot)">上传图片{{spot}}</button>
+                    </div>
+                </div>
+                <input type="file" ng2FileSelect [uploader]="uploader" [style.display]="'none'"/>
+            </div>
+        </label>
     </div>
 
-    <div>
-        amazon链接
-        <input [(ngModel)]="_product.link" type="text" />
+    <div style="margin-bottom: 1em">
+        <button type="submit"
+                [disabled]="productForm.pristine" class="btn btn-success">Save</button> &nbsp;
+        <button type="reset" (click)="revert()"
+                [disabled]="productForm.pristine" class="btn btn-danger">Revert</button>
     </div>
+</form>
 
-
-    <div *ngIf="selectedProduct; else editBlock">
-        <button (click)="edit(_item)">编辑</button>
-    </div>
-    <ng-template #editBlock>
-        <div>
-            <button (click)="submit(_item)">提交</button>
-        </div>
-    </ng-template>
-</div>
+<p>productForm value: {{ productForm.value | json}}</p>

@@ -22,26 +22,7 @@ class ProductDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi:
   override def addProducts(data: JsArray) = {
     val f = for(product <- data.value) yield {
       save(product.as[Product])
-//      addProduct(product.as[JsObject])
     }
     Future.sequence(f)
   }
-
-  /*override def addProduct(product: JsObject) = {
-    collection.flatMap(_.insert(product)).map{ _ =>
-      new Sku(
-        (product \ "id").as[Int],
-        (product \ "item").as[Int],
-        (product \ "name").as[String],
-        (product \ "product").as[String],
-        (product \ "attributes").as[Array[Map[String, String]]],
-        (product \ "content").as[String],
-        (product \ "price").as[Double],
-        (product \ "sellPrice").as[Double],
-        (product \ "asin").as[String],
-        (product \ "stock").as[Int],
-        (product \ "show").as[Int],
-        (product \ "images").as[Map[String, String]]
-      )}
-  }*/
 }

@@ -6,9 +6,9 @@ import reactivemongo.bson._
 
 import scala.collection.mutable.ArrayBuffer
 
-case class Product(id: Int, name: String, sku: String, category: Array[Int], parent: Int,
+case class Product(id: Int, name: String, sku: String, category: Int, parent: Int,
                    attributes: Array[Map[String, String]], content: String, price: Double, sellPrice: Double,
-                   asin: String, stock: Int, show: Int, images: Map[String, String], link: String)
+                   asin: String, stock: Int, show: Boolean, images: Map[String, String], link: String)
 
 object Product {
   implicit object ProductReader extends BSONDocumentReader[Product] {
@@ -17,7 +17,7 @@ object Product {
         id <- bson.getAs[Int]("id")
         name <- bson.getAs[String]("name")
         sku <- bson.getAs[String]("sku")
-        category <- bson.getAs[Array[Int]]("category")
+        category <- bson.getAs[Int]("category")
         parent <- bson.getAs[Int]("parent")
         attributes <- bson.getAs[BSONArray]("attributes")
         content <- bson.getAs[String]("content")
@@ -25,7 +25,7 @@ object Product {
         sellPrice <- bson.getAs[Double]("sellPrice")
         asin <- bson.getAs[String]("asin")
         stock <- bson.getAs[Int]("stock")
-        show <- bson.getAs[Int]("show")
+        show <- bson.getAs[Boolean]("show")
         images <- bson.getAs[Map[String,String]]("images")
         link <- bson.getAs[String]("link")
       } yield {

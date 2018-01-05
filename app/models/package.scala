@@ -24,4 +24,14 @@ package object models {
       }
     }
   }
+
+/*  implicit val mapReads = new Reads[Map[String, String]] {
+    override def reads(json: JsValue) = {
+      json match {
+        case v: JsObject =>
+          JsSuccess(DateTime.parse(v.value, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")))
+        case _ => JsError("not valid date str!")
+      }
+    }
+  }*/
 }

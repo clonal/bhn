@@ -19,10 +19,16 @@
 
     <div>
         BANNER展示图
-        <div *ngIf="menu.banner['1']">
-            <img src='{{"../images/" + menu.banner["1"]}}' width="200" height="50" />
+        <div *ngFor="let spot of imageSpots">
+            <div *ngIf="menu.banner[spot]">
+                <img src='{{"../images/" + menu.banner["1"]}}' width="200" height="50" />
+                <button (click)="removeBanner(spot)">移除图片{{spot}}</button>
+            </div>
+            <div *ngIf="!menu.banner[spot]">
+                <button (click)="uploadBanner(bt, spot)">上传图片{{spot}}</button>
+            </div>
         </div>
-        <input type="file" ng2FileSelect [uploader]="uploader" />
+        <input #bt type="file" ng2FileSelect [uploader]="uploader" [style.display]="'none'"/>
     </div>
 
 

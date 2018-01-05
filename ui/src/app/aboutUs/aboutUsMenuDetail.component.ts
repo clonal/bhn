@@ -15,7 +15,7 @@ export class AboutUsMenuDetailComponent implements OnInit {
     menu$: Observable<Menu>;
     aboutUsMenu = AboutUsMenu;
     selectedMenu: string;
-    // parent: number = this.aboutUsMenu;
+    // department: number = this.aboutUsMenu;
     // menuName: string = '';
     // desc: string = '';
     // content: string = '';
@@ -23,7 +23,7 @@ export class AboutUsMenuDetailComponent implements OnInit {
         url: '/api/menu/addBannerImages',
         method: 'POST'
     });
-
+    imageSpots = [1, 2, 3, 4];
     ngOnInit(): void {
         this.menu$ = this.route.paramMap
             .switchMap((params: ParamMap) =>
@@ -54,6 +54,16 @@ export class AboutUsMenuDetailComponent implements OnInit {
         let json = {'name': menu.name, 'parent': menu.parent,
             'desc': menu.desc, 'content': menu.content};
         this.aboutService.editMenu(this.selectedMenu, json, this.uploader);
+    }
+
+    removeBanner(s: any) {
+        let a = {1: 3, 2: 4};
+        alert(a['1']);
+    }
+
+    uploadBanner(e, s) {
+        alert(s);
+        e.click();
     }
 
 }

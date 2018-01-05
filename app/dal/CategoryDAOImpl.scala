@@ -15,19 +15,8 @@ class CategoryDAOImpl @Inject()(implicit ec: ExecutionContext,
 
   override def addCategories(data: JsArray) = {
     val f = for(category <- data.value) yield {
-      addCategory(category.as[JsObject])
+      save(category.as[Category])
     }
     Future.sequence(f)
-  }
-
-  override def addCategory(category: JsObject) = {
-    collection.flatMap(_.insert(category)).map{ _ =>
-      new Category(
-        (category \ "id").as[Int],
-        (category \ "name").as[String],
-        (category \ "desc").as[String],
-        (category \ "parent").as[Int],
-        (category \ "banner").as[String]
-      )}
   }
 }

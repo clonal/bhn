@@ -6,17 +6,20 @@ import {Category} from '../model/category';
 import {HttpClient} from '@angular/common/http';
 import {FileUploader} from 'ng2-file-upload';
 import {Product} from '../model/product';
+import {Department} from '../model/department';
 
 @Injectable()
 export class ProductService {
     products: Product[];
     categories: Category[];
+    departments: Department[];
 
     constructor(private backendService: BackendService,
                 private logger: LoggerService,
                 private client: HttpClient) {
         this.initProducts();
         this.initCategories();
+        this.initDepartments();
     }
 
     initProducts() {
@@ -28,6 +31,12 @@ export class ProductService {
     initCategories() {
         this.client.get('/api/product/listCategories').subscribe(result =>
             this.categories = result as Category[]
+        );
+    }
+
+    initDepartments() {
+        this.client.get('/api/product/listDepartments').subscribe(result =>
+            this.departments = result as Department[]
         );
     }
 
@@ -47,6 +56,22 @@ export class ProductService {
             });
     }
 
+    getDepartment(id: string | any): Observable<Department> {
+        let str = id == null ? '' : '?department=' + id;
+        return this.client.get('/api/product/findDepartment' + str)
+            .map(result => {
+                if (result) {
+                    if (result['error'] || result['info']) {
+                        return new Department(0, '', '');
+                    } else if (result['department']) {
+                        return result['department'] as Department;
+                    }
+                } else {
+                    return new Department(0, '', '');
+                }
+            });
+    }
+
     getTopCategories(): Observable<Category[]> {
         return this.client.get('api/product/listTopCategories')
             .map(result => {
@@ -62,6 +87,12 @@ export class ProductService {
             uploader.setOptions(op);
             uploader.uploadAll();
             this.initCategories();
+        });
+    }
+
+    addDepartment(department: Department) {
+        this.client.post('/api/product/addDepartment', department).subscribe( result => {
+            this.initDepartments();
         });
     }
 
@@ -106,15 +137,21 @@ export class ProductService {
             .map(result => {
                 if (result) {
                     if (result['error'] || result['info']) {
-                        return new Product(0, '', '', [], 0, [], '',
-                            0, 0, '', 0, 0, [], '');
+                        return new Product(0, '', '', 0, 0, [], '',
+                            0, 0, '', 0, false, {}, '');
                     } else if (result['product']) {
                         return result['product'] as Product;
                     }
                 } else {
-                    return new Product(0, '', '', [], 0, [], '',
-                        0, 0, '', 0, 0, [], '');
+                    return new Product(0, '', '', 0, 0, [], '',
+                        0, 0, '', 0, false, {}, '');
                 }
             });
+    }
+
+    addProduct(product: Product) {
+        this.client.post('/api/product/addProduct', product).subscribe(p => {
+           this.initProducts();
+        });
     }
 }

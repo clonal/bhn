@@ -2,7 +2,7 @@ export class Product {
     id: number;
     name: string;
     sku: string;
-    category: number[];
+    category: number;
     parent: number;
     attributes: object[];
     content: string;
@@ -10,15 +10,15 @@ export class Product {
     sellPrice: number;
     asin: string;
     stock: number;
-    show: number;
-    images: object[];
+    show: boolean;
+    images: object;
     link: string;
 
 
-    constructor(id: number, name: string, sku: string, category: number[],
+    constructor(id: number, name: string, sku: string, category: number,
                 parent: number, attributes: Object[], content: string, price: number,
-                sellPrice: number, asin: string, stock: number, show: number,
-                images: Object[], link: string) {
+                sellPrice: number, asin: string, stock: number, show: boolean,
+                images: Object, link: string) {
         this.id = id;
         this.name = name;
         this.sku = sku;

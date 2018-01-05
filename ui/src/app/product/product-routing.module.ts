@@ -29,7 +29,7 @@ const productRoutes: Routes = [
                 component: CategoryListComponent
             },
             {
-                path: 'category/:id',
+                path: 'category',
                 component: CategoryDetailComponent
             },
             {

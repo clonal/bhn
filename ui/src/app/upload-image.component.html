@@ -3,7 +3,8 @@
 </style>
         <div class="col-md-3">
             <h3>添加图片</h3>
-            <input type="file" ng2FileSelect [uploader]="uploader" multiple  /><br/>
+            <input #bbtn type="file" ng2FileSelect [uploader]="uploader" multiple [style.display]="'none'"/><br/>
+            <button (click)="bbtn.click()">上传</button>
         </div>
 
         <div class="col-md-9" style="margin-bottom: 40px">
