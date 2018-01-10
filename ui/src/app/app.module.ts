@@ -23,13 +23,13 @@ import {ReceiptComponent} from './mws/receipt.component';
 import {MwsService} from './mws/mws.service';
 import {BackendComponent} from './backend.component';
 import {BackendService} from './backend.service';
-import {HttpModule} from '@angular/http';
 import {TreeMenuComponent} from './tree-menu.component';
 import {UploadImageComponent} from './upload-image.component';
 import {AboutUsModule} from './aboutUs/aboutUs.module';
 import {DateService} from './utils/date.service';
 import {SupportModule} from './support/support.module';
 import {ProductModule} from './product/product.module';
+import {ImageUploadModule} from 'angular2-image-upload';
 
 
 export function jwtOptionsFactory(): any {
@@ -55,6 +55,7 @@ export function jwtOptionsFactory(): any {
             },
             config: { skipWhenExpired: true }
         }),
+        ImageUploadModule.forRoot(),
         AboutUsModule,
         SupportModule,
         ProductModule,

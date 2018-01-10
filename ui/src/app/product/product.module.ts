@@ -11,6 +11,7 @@ import {ProductNavComponent} from './productNav.component';
 import {CategorySelectorComponent} from './categorySelector.component';
 import {ProductDetailComponent} from './productDetail.component';
 import {ProductListComponent} from './productList.component';
+import {ImageUploadModule} from 'angular2-image-upload';
 
 @NgModule({
     imports: [
@@ -19,6 +20,7 @@ import {ProductListComponent} from './productList.component';
         FileUploadModule,
         ProductRoutingModule,
         ReactiveFormsModule,
+        ImageUploadModule.forRoot()
     ],
     declarations: [
         ProductComponent,

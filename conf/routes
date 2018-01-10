@@ -79,7 +79,9 @@ POST    /api/product/removeProduct/:product               controllers.product.Pr
 GET     /api/product/listDepartments                      controllers.product.ProductController.listDepartments
 GET     /api/product/findDepartment                       controllers.product.ProductController.findDepartment(department: Option[Int])
 + nocsrf
-POST    /api/product/addDepartment                       controllers.product.ProductController.addDepartment
+POST    /api/product/addDepartment                        controllers.product.ProductController.addDepartment
++ nocsrf
+POST    /api/product/updateProductPic                     controllers.product.ProductController.updateProductPic(index: Option[Int], pid: Option[Int])
 
 + nocsrf
 POST    /api/mws/sendmails                                controllers.amazonWS.MWSController.sendMails(from: Option[String], to: Option[String], template: Option[Int])

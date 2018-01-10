@@ -18,11 +18,11 @@ trait BaseDAO {
     collection.flatMap(_.update(selector, modifier))
   }
 
-  def update[S, T](selector: S, entity: T)(implicit ec: ExecutionContext,
+  def update[S, T](selector: S, entity: T, upsert: Boolean = true)(implicit ec: ExecutionContext,
                                            reader: reactivemongo.bson.BSONDocumentReader[T],
                                            swriter: reactivemongo.bson.BSONDocumentWriter[S],
                                            twriter: reactivemongo.bson.BSONDocumentWriter[T]) = {
-    collection.flatMap(_.findAndUpdate(selector, entity).map(_.result[T]))
+    collection.flatMap(_.findAndUpdate(selector, entity, upsert = upsert).map(_.result[T]))
   }
 
   def remove(id: Int)(implicit ec: ExecutionContext): Future[WriteResult] = {

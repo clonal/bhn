@@ -205,4 +205,8 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
   override def queryComments() = {
     commentDAO.findAll[Comment]
   }
+
+  override def updateOrSaveProduct(product: Product) = {
+    productDAO.update(BSONDocument("id" -> product.id), product)
+  }
 }

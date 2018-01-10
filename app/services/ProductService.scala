@@ -47,6 +47,8 @@ trait ProductService {
   def updateProductCategory(category: Int, id: Int): Future[Seq[Option[Product]]]
   def updateCategoryBanner(cate: Int, filename: String)
 
+  def updateOrSaveProduct(product: Product): Future[Option[Product]]
+
   def queryDepartments(): Future[Seq[Department]]
   def queryCategories(): Future[Seq[Category]]
   def queryTopCategories(): Future[Seq[Category]]

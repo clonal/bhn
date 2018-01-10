@@ -154,4 +154,12 @@ export class ProductService {
            this.initProducts();
         });
     }
+
+    uploadProductPic(uploader: FileUploader, i: number, id: string) {
+        let op = uploader.options;
+        let idStr = id == null ? '' : '&pid=' + id;
+        op.url = '/api/product/updateProductPic?index=' + i + idStr;
+        uploader.setOptions(op);
+        uploader.uploadAll();
+    }
 }

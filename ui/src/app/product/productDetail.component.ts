@@ -6,6 +6,7 @@ import {FileUploader} from 'ng2-file-upload';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {LoggerService} from '../utils/logger.service';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
     templateUrl: 'productDetail.component.html'
@@ -19,13 +20,22 @@ export class ProductDetailComponent implements OnInit, OnChanges {
         method: 'POST'
     });
     productForm: FormGroup;
-    imageSpots = [1, 2, 3, 4];
+    imageNames = ['', '', '', ''];
+    // imageUrl: any;
     constructor(private productService: ProductService,
                 private logger: LoggerService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private sanitizer: DomSanitizer,
                 private fb: FormBuilder) {
         this.createForm();
+        this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
+            this.logger.debug('ImageUpload:uploaded:' + item + status + response);
+            if (response) {
+                let json = JSON.parse(response);
+                this.productForm.get('images').get('image' + json['index']).setValue(json['img']);
+            }
+        };
     }
 
     ngOnInit(): void {
@@ -51,10 +61,10 @@ export class ProductDetailComponent implements OnInit, OnChanges {
                 show: p.show,
                 attributes: p.attributes as Object[],
                 images: {
-                    image1: p.images['1'] || '1',
-                    image2: p.images['2'] || '2',
-                    image3: p.images['3'] || '3',
-                    image4: p.images['4'] || '4'
+                    image0: p.images['image0'] || '',
+                    image1: p.images['image1'] || '',
+                    image2: p.images['image2'] || '',
+                    image3: p.images['image3'] || ''
                 },
                 link: p.link
             });
@@ -75,29 +85,19 @@ export class ProductDetailComponent implements OnInit, OnChanges {
             show: true,
             attributes: this.fb.array([]),
             images: this.fb.group({
+               image0: '',
                image1: '',
                image2: '',
-               image3: '',
-               image4: ''
+               image3: ''
             }),
             link: ''
         })
     }
 
-/*    addInput() {
-        let number = this.attr.length + 1;
-        this.attr.push({'key': '', 'value': ''});
-    }
-
-    removeInput(i) {
-        let j = this.attr.indexOf(i);
-        this.attr.splice(j, 1);
-    }*/
-
     onSubmit() {
-        alert(22);
+        let pid = this.selectedProduct == null ? 0 : +this.selectedProduct;
         let product = new Product(
-            0,
+            pid,
             this.productForm.get('name').value,
             this.productForm.get('sku').value,
             +this.productForm.get('category').value,
@@ -143,16 +143,24 @@ export class ProductDetailComponent implements OnInit, OnChanges {
         this.attributes.push(this.fb.group({'key': '', 'value': ''}));
     }
 
-    uploadImage(bt, name, spot) {
-        alert('name: ' + name + ', spot:' + spot);
-        // bt.click();
+    uploadImage(bt, spot) {
+        // alert('name: '  + ', spot:' + spot + ', enter uploadImage');
+        bt.click();
     }
 
     removeImage(spot) {
+        // alert('enter removeImage' + spot);
         let name = 'image' + spot;
-        alert(name);
-        alert(this.productForm.get('images').get(name).value);
         this.productForm.get('images').get(name).setValue('');
-        alert('22' + this.productForm.get('images').get(name).value);
     }
+
+    onChangeSelectFile(event, i) {
+        const file = event.currentTarget.files[0];
+        if (file) {
+            // 必须 bypassSecurityTrustUrl 转换一下 url ，要不能angular会报，说url不安全错误。
+            // this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file));
+            this.productService.uploadProductPic(this.uploader, i, this.selectedProduct);
+        }
+    }
+
 }

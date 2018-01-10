@@ -85,31 +85,25 @@
 
     <div>
         <label>产品展示图:
-            <div formGroupName="images" >
-                <!--                <input  type="hidden" formControlName="image1" />
-                                <input  type="hidden" formControlName="image2" />
-                                <input  type="hidden" formControlName="image3" />
-                                <input  type="hidden" formControlName="image4" />-->
-                <div *ngFor="let spot of imageSpots">
-                    <input #imageUrl type="hidden" formControlName="{{'image' + spot}}" />
-                    <div *ngIf="imageUrl.value != ''">
-                        <img src='{{"../images/" + imageUrl.value}}' width="200" height="50" />
-                        <button (click)="removeImage(spot)">移除图片{{spot}}</button>
-                    </div>
-                    <div *ngIf="imageUrl.value === ''">
-                        <button (click)="uploadImage(upbt, imageUrl.value, spot)">上传图片{{spot}}</button>
-                    </div>
+            <div formGroupName="images">
+                <div *ngFor="let spot of imageNames; index as i">
+                    <input #imageUrl type="hidden" formControlName="{{'image' + i}}"/>
+                    <img src="{{'../' + imageUrl.value}}" width="200" height="50"/>
+                    <button (click)="uploadImage(upbt, i)" >上传图片{{i+1}}</button>
+                    <button  (click)="removeImage(i)">移除图片{{i+1}}</button>
+                    <input #upbt type="file" ng2FileSelect [uploader]="uploader" [style.display]="'none'"
+                           (change)="onChangeSelectFile($event, i)" (onComplete)="aabb()"/>
                 </div>
-                <input type="file" ng2FileSelect [uploader]="uploader" [style.display]="'none'"/>
             </div>
         </label>
+
     </div>
 
     <div style="margin-bottom: 1em">
         <button type="submit" (click)="onSubmit()"
-                [disabled]="productForm.pristine" class="btn btn-success">Save</button> &nbsp;
+                 class="btn btn-success">Save</button> &nbsp;
         <button type="reset" (click)="revert()"
-                [disabled]="productForm.pristine" class="btn btn-danger">Revert</button>
+                 class="btn btn-danger">Revert</button>
     </div>
 </form>
 

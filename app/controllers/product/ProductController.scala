@@ -1,11 +1,12 @@
 package controllers.product
 
-import java.io.File
-import java.nio.file.Paths
+import java.io.{File, IOException}
+import java.nio.file.{Files, Path, Paths, StandardCopyOption}
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
 import models.{Category, Department, Product}
+import org.joda.time.DateTime
 import play.api.Configuration
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsArray, JsObject, Json}
@@ -22,42 +23,115 @@ class ProductController @Inject()(
                                   system: ActorSystem
                                 ) (implicit ec: ExecutionContext)extends AbstractController(components) with I18nSupport  {
 
-  final val IMG_PATH = System.getProperty("user.dir") + config.underlying.getString("play.assets.path") + File.separator + "images"
+//  final val IMG_PATH = System.getProperty("user.dir") + config.underlying.getString("play.assets.path") + File.separator + "images"
+  final val IMAGE_PREFIX = "images"
+  final val IMG_DIR_PREFIX = "product_"
+  final val TEMP_IMG_DIR_PREFIX = "temp_"
+  final val ASSETS_BASIC = config.underlying.getString("play.assets.path").tail
+  final val IMG_PATH = Paths.get( ASSETS_BASIC + File.separator + IMAGE_PREFIX)
+  final val TEMP_IMG_PATH_NEW = Paths.get(IMAGE_PREFIX + File.separator +"temp_product")
+
+
+  def productImgDirectory(id: Int) = {
+    Paths.get(IMAGE_PREFIX + File.separator + IMG_DIR_PREFIX + id)
+  }
+
+  def productTempImgDirectory(id: Option[Int]) = id match {
+    case Some(pid) => Paths.get(productImgDirectory(pid).toString + File.separator + TEMP_IMG_DIR_PREFIX.init)
+    case None => TEMP_IMG_PATH_NEW
+  }
+
+  def formatImagePrefix(id: Int, index: String) = {
+    IMG_DIR_PREFIX + id + "_" + index
+  }
+
+  def formatImageName(name: String, id: Int, index: String) = {
+    val suffix = name.substring(name.lastIndexOf("."))
+    formatImagePrefix(id, index) + suffix
+  }
+
+  def mkDir(directory: Path): Unit = {
+    val _directory = Paths.get(ASSETS_BASIC + File.separator + directory.toString)
+    val directoryFile = _directory.toFile
+    if (!directoryFile.exists() || !directoryFile.isDirectory) {
+      Files.createDirectory(_directory)
+    }
+  }
+
+  def moveTempPic(image: String, id: Int, index: String, dir: Path) = {
+    if (!image.equals("")) {
+      val formatName = formatImageName(image, id, index)
+      val path = dir.toString + File.separator + formatName
+      //      Files.move(Paths.get(IMG_PATH + File.separator + image), Paths.get(path))
+      removePicInDir(dir, formatImagePrefix(id, index))
+      Files.move(Paths.get(ASSETS_BASIC + File.separator + image),
+        Paths.get(ASSETS_BASIC + File.separator + path),
+        StandardCopyOption.REPLACE_EXISTING)
+      path
+    } else {
+      image
+    }
+  }
+
+  def removePicInDir(dir: Path, prefix: String) = {
+    val it = Files.newDirectoryStream(Paths.get(ASSETS_BASIC + File.separator + dir.toString)).iterator()
+    while(it.hasNext) {
+      val next = it.next()
+      if (next.getFileName.toString.startsWith(prefix)) {
+        Files.deleteIfExists(next)
+      }
+    }
+  }
+
+  def tempPicName(index: Int, suffix: String) = {
+    val now = DateTime.now().toString("yyyyMMddHHmmss")
+    TEMP_IMG_DIR_PREFIX + index + "_" + now + suffix
+  }
 
   //添加产品
   def addProduct() = Action.async(parse.json) {
     implicit request =>
-          val jValue = request.body.as[JsObject]
-          val attributes = (jValue \ "attributes").as[JsArray].value map { v =>
-            val key = (v \ "key").as[String]
-            val value = (v \ "value").as[String]
-            Map("key" -> key,"value" -> value)
-          }
-          val id = productService.PRODUCT_AUTO_ID.addAndGet(1)
-          val m11 = (jValue \ "images").get.asInstanceOf[JsObject].value
-          val m22 = m11.map { case (kk, vv) =>
-            (kk, vv.toString())
-          }
+      val product = request.body.as[Product]
+      val id = if (product.id == 0) {
+        val _id = productService.PRODUCT_AUTO_ID.incrementAndGet()
+//        Files.createDirectories(productImgDirectory(_id))
+        _id
+      } else {
+        product.id
+      }
+       val dir = productImgDirectory(id)
+       mkDir(dir)
+         //更改temp为正式的图片名,正式图片命名规则为product_id_index.后缀
+        try {
+          val images = product.images map { case(index, image) =>
+            if (image == "") {
+              removePicInDir(dir, formatImagePrefix(id, index))
+              (index, image)
+            } else {
+              val formatName = if (product.id != 0) {
+                val imagePath = Paths.get(ASSETS_BASIC + File.separator + image).getParent
+                val lastName = if (imagePath == null) "" else imagePath.getFileName.toString
+                if (lastName == "temp_product" || lastName == "temp") {
+                  moveTempPic(image, id, index, dir)
+                } else {
+                  image
+                }
+              } else {
+                moveTempPic(image, id, index, dir)
+              }
+              (index, formatName)
+            }
 
-          val product = Product(id,
-            (jValue \ "name").as[String],
-            (jValue \ "sku").as[String],
-            (jValue \ "category").as[Int],
-            (jValue \ "parent").as[Int],
-            attributes.toArray,
-            (jValue \ "content").as[String],
-            (jValue \ "price").as[Double],
-            (jValue \ "sellPrice").as[Double],
-            (jValue \ "asin").as[String],
-            (jValue \ "stock").as[Int],
-            (jValue \ "show").as[Boolean],
-            m22.toMap,
-            (jValue \ "link").as[String]
-          )
-
-          productService.addProduct(product).flatMap{ s =>
+          }
+          productService.updateOrSaveProduct(product.copy(id = id, images = images)).flatMap{ s =>
             Future(Ok(Json.obj("ok" -> "ok")))
           }
+        } catch {
+          case e: IOException =>
+            e.printStackTrace()
+            Future.successful(BadRequest(Json.obj("error" -> "upload error")))
+        }
+
   }
   //删除产品
   def removeProduct(product: Int) = Action.async {
@@ -119,6 +193,28 @@ class ProductController @Inject()(
       productService.addDepartment(jsObject.as[Department]).map(m => Ok(Json.toJsObject(m)))
   }
 
+  def updateProductPic(index: Option[Int], pid: Option[Int]) = Action.async(parse.multipartFormData) {
+    implicit request =>
+      try {
+        (for{
+          _index <- index
+          file <- request.body.files.headOption
+        } yield {
+          val filename = tempPicName(_index, file.filename.substring(file.filename.lastIndexOf(".")))
+          val directory = productTempImgDirectory(pid)
+          mkDir(directory)
+          removePicInDir(directory, TEMP_IMG_DIR_PREFIX + _index + "_")
+          val path = directory.toString + File.separator + filename
+          file.ref.moveTo(Paths.get(ASSETS_BASIC + File.separator + path), replace = true)
+          Future.successful(Ok(Json.obj("index" -> _index, "img" -> path)))
+        }).getOrElse(Future(BadRequest("no file to upload")))
+      } catch  {
+        case e: Exception =>
+          e.printStackTrace()
+          Future.successful(BadRequest(Json.obj("error" -> "upload error")))
+      }
+  }
+
   //删除产品类型
   def removeCategory(category: Int) = Action.async {
     implicit request =>
@@ -136,22 +232,6 @@ class ProductController @Inject()(
           Ok(Json.obj("info" -> s"edit ${c.name} ok"))
         )
       }
-     /* productService.findCategory(category).flatMap{
-        case Some(c) =>
-          var modifier = BSONDocument.empty
-          (request.body \ "parent").asOpt[Int].foreach{ v =>
-            modifier ++= ("parent" -> v)
-          }
-          (request.body \ "name").asOpt[String].foreach{ v =>
-            modifier ++= ("name" -> v)
-          }
-          (request.body \ "desc").asOpt[String].foreach{ v =>
-            modifier ++= ("desc" -> v)
-          }
-          productService.updateCategory(BSONDocument("id" -> category), modifier).map(_ => Ok(Json.obj("info" -> "ok")))
-        case None =>
-          Future(BadRequest(Json.obj("error" -> "wrong category")))
-      }*/
   }
 
   def addCategoryBanner(category: Option[Int]) = Action.async(parse.multipartFormData) {
@@ -162,7 +242,7 @@ class ProductController @Inject()(
               file <- request.body.files.headOption
             } yield {
             val filename = System.currentTimeMillis() + "_" + file.filename
-            file.ref.moveTo(Paths.get(IMG_PATH + File.separator + filename), replace = true)
+            file.ref.moveTo(Paths.get(IMG_PATH.toString + File.separator + filename), replace = true)
             productService.updateCategoryBanner(cate, filename)
             Future.successful(Ok(Json.obj("msg" -> "upload completed!")))
         }).getOrElse(Future(BadRequest("no file to upload")))
