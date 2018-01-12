@@ -4,7 +4,7 @@
     "data": [
       {
         "id": 1,
-        "name": "root",
+        "name": "backend",
         "parent": 0,
         "banner": {"1": "222"},
         "desc": "后台中心",
@@ -14,17 +14,37 @@
       },
       {
         "id": 2,
-        "name": "aboutUs",
+        "name": "contents",
         "parent": 1,
         "banner": {},
-        "desc": "关于我们",
+        "desc": "内容管理",
         "content": "",
         "order": 1,
         "required": true
       },
       {
         "id": 3,
-        "name": "productManager",
+        "name": "column",
+        "parent": 2,
+        "banner": {},
+        "desc": "栏目管理",
+        "content": "",
+        "order": 1,
+        "required": true
+      },
+      {
+        "id": 4,
+        "name": "article",
+        "parent": 2,
+        "banner": {},
+        "desc": "文章管理",
+        "content": "",
+        "order": 2,
+        "required": true
+      },
+      {
+        "id": 5,
+        "name": "products",
         "parent": 1,
         "banner": {},
         "desc": "产品中心",
@@ -33,87 +53,47 @@
         "required": true
       },
       {
-        "id": 4,
-        "name": "addProduct",
-        "parent": 3,
+        "id": 6,
+        "name": "product",
+        "parent": 5,
         "banner": {},
-        "desc": "添加产品",
+        "desc": "产品管理",
         "content": "",
         "order": 1,
         "required": true
       },
       {
-        "id": 5,
-        "name": "addCategory",
-        "parent": 3,
+        "id": 7,
+        "name": "category",
+        "parent": 5,
         "banner": {},
-        "desc": "添加分类",
+        "desc": "类目管理",
         "content": "",
         "order": 2,
         "required": true
       },
       {
-        "id": 6,
-        "name": "categoryList",
-        "parent": 3,
-        "banner": {},
-        "desc": "分类列表",
-        "content": "",
-        "order": 3,
-        "required": true
-      },
-      {
-        "id": 7,
-        "name": "comments",
-        "parent": 3,
-        "banner": {},
-        "desc": "产品评论",
-        "content": "",
-        "order": 4,
-        "required": true
-      },
-      {
         "id": 8,
-        "name": "support",
+        "name": "infos",
         "parent": 1,
         "banner": {},
-        "desc": "服务支持",
+        "desc": "信息管理",
         "content": "",
         "order": 3,
         "required": true
       },
       {
         "id": 9,
-        "name": "profile",
-        "parent": 2,
+        "name": "comment",
+        "parent": 8,
         "banner": {},
-        "desc": "公司简介",
+        "desc": "评论管理",
         "content": "",
-        "order": 1,
+        "order": 4,
         "required": true
       },
       {
         "id": 10,
-        "name": "contact",
-        "parent": 2,
-        "banner": {},
-        "desc": "联系我们",
-        "content": "",
-        "order": 2,
-        "required": true
-      },
-      {
-        "id": 11,
-        "name": "question",
-        "parent": 8,
-        "banner": {},
-        "desc": "常见问题",
-        "content": "",
-        "order": 1,
-        "required": true
-      },
-      {
-        "id": 12,
         "name": "feedback",
         "parent": 8,
         "banner": {},
