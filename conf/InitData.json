@@ -105,6 +105,74 @@
     ]
   },
   {
+    "collection": "column",
+    "data": [
+      {
+        "id": 1,
+        "name": "aboutUs",
+        "parent": 0,
+        "banner": "",
+        "desc": "关于我们",
+        "content": "关于我们",
+        "order": 1
+      },
+      {
+        "id": 2,
+        "name": "company",
+        "parent": 1,
+        "banner": "",
+        "desc": "关于我们",
+        "content": "我们公司",
+        "order": 1
+      },
+      {
+        "id": 3,
+        "name": "contact",
+        "parent": 1,
+        "banner": "",
+        "desc": "联系我们",
+        "content": "联系我们",
+        "order": 2
+      },
+      {
+        "id": 4,
+        "name": "support",
+        "parent": 0,
+        "banner": "",
+        "desc": "服务支持",
+        "content": "服务支持",
+        "order": 2
+      },
+      {
+        "id": 5,
+        "name": "refund",
+        "parent": 4,
+        "banner": "",
+        "desc": "退款",
+        "content": "退款",
+        "order": 1
+      },
+      {
+        "id": 6,
+        "name": "faq",
+        "parent": 4,
+        "banner": "",
+        "desc": "F&Q",
+        "content": "F&Q",
+        "order": 2
+      },
+      {
+        "id": 7,
+        "name": "feedback",
+        "parent": 0,
+        "banner": "",
+        "desc": "信息反馈",
+        "content": "信息反馈",
+        "order": 3
+      }
+    ]
+  },
+  {
     "collection": "article",
     "data": [
       {

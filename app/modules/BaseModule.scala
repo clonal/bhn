@@ -54,6 +54,8 @@ class BaseModule extends AbstractModule with ScalaModule {
     bind[QuestionDAO].to[QuestionDAOImpl]
     bind[FeedbackDAO].to[FeedBackDAOImpl]
     bind[DepartmentDAO].to[DepartmentDAOImpl]
+    bind[ColumnDAO].to[ColumnDAOImpl]
+
 
     bind[UserService].to[UserServiceImpl]
     bind[AuthTokenService].to[AuthTokenServiceImpl]
@@ -63,6 +65,7 @@ class BaseModule extends AbstractModule with ScalaModule {
     bind[MWSService].to[MWSServiceImpl]
     bind[QuestionService].to[QuestionServiceImpl]
     bind[FeedbackService].to[FeedbackServiceImpl]
+    bind[ColumnService].to[ColumnServiceImpl]
 
     bind(classOf[Initial]).asEagerSingleton()
     ()

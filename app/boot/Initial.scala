@@ -20,6 +20,7 @@ class Initial @Inject()(autoIncDao: AutoIncDAO,
                         productService: ProductService,
                         questionService: QuestionService,
                         feedbackService: FeedbackService,
+                        columnService: ColumnService,
                        )(implicit ec: ExecutionContext){
 
   //初始化autoInc
@@ -47,32 +48,10 @@ class Initial @Inject()(autoIncDao: AutoIncDAO,
           case "receipt_template" => mwsService.initReceiptTemplate(data)
           case "question" => questionService.initQuestion(data)
           case "feedback" => feedbackService.initFeedback(data)
+          case "column" => columnService.initColumn(data)
           case _ =>
         }
       }
     case _ =>
   }
-
-  //自增ID
-//  val MENU_AUTO_ID = new AtomicInteger()
-//  val ARTICLE_AUTO_ID = new AtomicInteger()
-//  menuService.getLastID().foreach{
-//    case Some(i) => menuService.MENU_AUTO_ID.set(i)
-//  }
-
-//  articleService.getLastID().foreach {
-//    case Some(i) => articleService.ARTICLE_AUTO_ID.set(i)
-//  }
-
-//  productService.getLastSkuID().foreach{
-//    case Some(i) => productService.SKU_AUTO_ID.set(i)
-//  }
-
-//  productService.getLastCategoryID().foreach{
-//    case Some(i) => productService.CATEGORY_AUTO_ID.set(i)
-//  }
-
-//  productService.getLastProductID().foreach{
-//    case Some(i) => productService.PRODUCT_AUTO_ID.set(i)
-//  }
 }

@@ -1,5 +1,6 @@
 package dal
 
+import org.mongodb.scala.ReadPreference
 import reactivemongo.api.BSONSerializationPack.{Reader, Writer}
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.commands.{UpdateWriteResult, WriteResult}

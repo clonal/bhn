@@ -172,9 +172,9 @@ class ProductController @Inject()(
       }
   }
   //sku列表
-  def listProducts() = Action.async {
+  def listProducts(num: Option[Int]) = Action.async {
     implicit request =>
-      productService.queryProducts().map{ list =>
+      productService.queryProducts(num).map{ list =>
         Ok(JsArray(list.map(x => Json.toJson(x))))
       }
   }
@@ -255,9 +255,9 @@ class ProductController @Inject()(
 
 
   //产品类型列表
-  def listCategories() = Action.async {
+  def listCategories(num: Option[Int]) = Action.async {
     implicit request =>
-      productService.queryCategories().map{ list =>
+      productService.queryCategories(num).map{ list =>
         Ok(JsArray(list.map(x => Json.toJsObject(x))))
       }
   }

@@ -50,8 +50,8 @@ trait ProductService {
   def updateOrSaveProduct(product: Product): Future[Option[Product]]
 
   def queryDepartments(): Future[Seq[Department]]
-  def queryCategories(): Future[Seq[Category]]
+  def queryCategories(num: Option[Int] = None): Future[Seq[Category]]
   def queryTopCategories(): Future[Seq[Category]]
-  def queryProducts(): Future[Seq[Product]]
+  def queryProducts(num: Option[Int] = None): Future[Seq[Product]]
   def queryComments(): Future[Seq[Comment]]
 }

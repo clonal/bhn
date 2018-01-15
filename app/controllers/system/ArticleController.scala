@@ -58,7 +58,7 @@ class ArticleController @Inject()(
         articleService.queryArticles(menu, _asc)
       }
       result.map{ list =>
-        Ok(JsArray(list.map(x => Json.toJson(x))))
+        Ok(Json.toJson(list))
         //        Ok(list.foldLeft(JsObject.empty)((acc, x) => acc ++ Json.obj(x.id.toString -> x.title)))
       }
   }

@@ -185,9 +185,9 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
     }
   }
 
-  override def queryCategories() = {
+  override def queryCategories(num: Option[Int]) = {
 //    categoryDAO.findAll[Category]
-    Future(categories.values.toSeq)
+    Future(categories.values.take(num.getOrElse(categories.size)).toSeq)
   }
 
   override def queryDepartments() = {
@@ -198,8 +198,9 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
     Future(categories.values.toSeq.filter(_.department == 0))
   }
 
-  override def queryProducts() = {
-    productDAO.findAll[Product]
+  override def queryProducts(num: Option[Int]) = {
+    Future(products.values.take(num.getOrElse(products.size)).toSeq)
+//    productDAO.findAll[Product]
   }
 
   override def queryComments() = {

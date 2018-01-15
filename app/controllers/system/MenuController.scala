@@ -263,6 +263,18 @@ class MenuController  @Inject()(
   }
 
   /**
+    * 获取首页banner
+    * @return
+    */
+  def homeBanners() = Action.async{
+    implicit request =>
+      menuService.findMenu(1).map {
+        case Some(m) => Ok(Json.obj("banners" -> m.banner.values))
+        case None => BadRequest(Json.obj("error" -> "cant find menu"))
+      }
+  }
+
+  /**
     * 菜单栏目明细
     * @param menu
     * @return

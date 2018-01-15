@@ -41,6 +41,8 @@ POST   /api/menu/removeMenu/:menu                         controllers.system.Men
 GET    /api/menu/showMenu                                 controllers.system.MenuController.showMenu(menu: Option[Int])
 + nocsrf
 POST   /api/menu/editMenu/:menu                           controllers.system.MenuController.editMenu(menu: Int)
++nocsrf
+POST   /api/menu/homeBanners                              controllers.system.MenuController.homeBanners()
 
 GET    /api/article/showArticle                           controllers.system.ArticleController.showArticle(article: Option[Int])
 GET    /api/article/showArticle/listArticles/:menu        controllers.system.ArticleController.listArticles(menu: Int, asc: Option[Int], recursive: Option[Boolean])
@@ -53,7 +55,7 @@ POST   /api/article/changeArticleOrder/:article/:changeTo controllers.system.Art
 GET    /api/article/removeArticle/:article                controllers.system.ArticleController.removeArticle(article: Int)
 
 
-GET    /api/product/listCategories                        controllers.product.ProductController.listCategories
+GET    /api/product/listCategories                        controllers.product.ProductController.listCategories(num: Option[Int])
 GET    /api/product/findCategory                          controllers.product.ProductController.findCategory(category: Option[Int])
 GET    /api/product/listTopCategories                     controllers.product.ProductController.listTopCategories
 + nocsrf
@@ -67,7 +69,7 @@ POST    /api/product/removeCategory/:category             controllers.product.Pr
 GET     /api/product/listComments                         controllers.product.ProductController.listComments
 GET     /api/product/findComment/:comment                 controllers.product.ProductController.commentDetail(comment: Int)
 GET     /api/product/findComment                          controllers.product.ProductController.findComment(product: Option[Int])
-GET     /api/product/listProducts                         controllers.product.ProductController.listProducts
+GET     /api/product/listProducts                         controllers.product.ProductController.listProducts(num: Option[Int])
 GET     /api/product/findProduct                          controllers.product.ProductController.findProduct(product: Option[Int])
 GET     /api/product/findProductsByParent/:parent         controllers.product.ProductController.findProductsByParent(parent: Int)
 + nocsrf
@@ -98,6 +100,9 @@ POST    /api/question/editQuestion                        controllers.system.Que
 GET     /api/feedback/listFeedbacks                       controllers.system.FeedbackController.listFeedbacks
 + nocsrf
 POST    /api/feedback/deleteFeedback/:id                  controllers.system.FeedbackController.deleteFeedback(id: Int)
+
+GET     /api/column/getColumn/:name                       controllers.system.ColumnController.getColumn(name: String)
+GET     /api/column/getChildrenColumn/:id                 controllers.system.ColumnController.getChildrenColumn(id: Int)
 
 #  end of all controllers APIs
 
