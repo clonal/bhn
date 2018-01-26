@@ -13,7 +13,7 @@ trait QuestionService {
 
   def updateQuestion(question: Question): Future[Option[Question]]
   def findQuestion(id: Int): Future[Option[Question]]
-  def removeQuestion(id: Int): Future[WriteResult]
+  def removeQuestion(id: Int): Future[Boolean]
   def queryQuestions(): Future[Seq[Question]]
   def getLastQuestionID(): Future[Option[Int]]
   def addQuestion(data: JsObject): Future[Question]

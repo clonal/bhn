@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BackendService} from '../backend.service';
+import {BackendService} from '../backend/backend.service';
 import {LoggerService} from '../utils/logger.service';
 import {Observable} from 'rxjs/Observable';
 import {Category} from '../model/category';

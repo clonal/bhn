@@ -9,6 +9,9 @@ import reactivemongo.bson.BSONDocument
 import scala.concurrent.Future
 
 trait ProductService {
+
+
+
   val CATEGORY_AUTO_ID = new AtomicInteger()
   val PRODUCT_AUTO_ID = new AtomicInteger()
   val DEPARTMENT_AUTO_ID = new AtomicInteger()
@@ -21,6 +24,8 @@ trait ProductService {
   def getLastCategoryID(): Future[Option[Int]]
   def getLastProductID(): Future[Option[Int]]
 
+  def getProductsByParent(id: Int): Seq[Product]
+
   def addDepartment(department: Department): Future[Department]
   def addDepartments(data: JsArray): Future[Seq[Department]]
   def addCategory(category: Category): Future[Category]
@@ -30,6 +35,7 @@ trait ProductService {
   def addProducts(data: JsArray): Future[Seq[Product]]
 
   def findCategory(category: Int): Future[Option[Category]]
+  def findCategoriesByDepartment(department: Int): Future[Seq[Category]]
   def findDepartment(department: Int): Future[Option[Department]]
   def findProduct(product: Int): Future[Option[Product]]
   def findProductsByParent(parent: Int): Future[Seq[Product]]
@@ -39,10 +45,13 @@ trait ProductService {
   def removeDepartment(department: Int): Future[Option[Department]]
   def removeCategory(category: Int): Future[Option[Category]]
   def removeProduct(product: Int): Future[Option[Product]]
+  def removeCategoryByDepartment(department: Int): Future[Boolean]
 
+  def saveCategory(category: Category): Future[Option[Category]]
   def updateCategory(selector: BSONDocument, category: Category): Future[Option[Category]]
   def updateProduct(selector: BSONDocument, product: Product): Future[Option[Product]]
   def updateDepartment(selector: BSONDocument, department: Department): Future[Option[Department]]
+  def saveDepartment(department: Department): Future[Option[Department]]
 
   def updateProductCategory(category: Int, id: Int): Future[Seq[Option[Product]]]
   def updateCategoryBanner(cate: Int, filename: String)
@@ -54,4 +63,7 @@ trait ProductService {
   def queryTopCategories(): Future[Seq[Category]]
   def queryProducts(num: Option[Int] = None): Future[Seq[Product]]
   def queryComments(): Future[Seq[Comment]]
+  def queryTopProducts(): Seq[Product]
+
+  def getDepartmentOrder(): Int
 }

@@ -12,9 +12,9 @@ trait ArticleDAO extends BaseDAO{
 
   def queryArticles(): Future[Seq[Article]]
 
-  def queryArticles(menu: Int, acs: Int): Future[Seq[Article]]
+  def queryArticles(column: Int, acs: Int): Future[Seq[Article]]
 
-  def findByOrder(menu: Int, order: Int): Future[Option[Article]]
+  def findByOrder(column: Int, order: Int): Future[Option[Article]]
 
   def update(article: Article): Future[UpdateWriteResult]
 

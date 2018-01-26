@@ -111,7 +111,7 @@
         "id": 1,
         "name": "aboutUs",
         "parent": 0,
-        "banner": "",
+        "banner": [],
         "desc": "关于我们",
         "content": "关于我们",
         "order": 1
@@ -120,7 +120,7 @@
         "id": 2,
         "name": "company",
         "parent": 1,
-        "banner": "",
+        "banner": [],
         "desc": "关于我们",
         "content": "我们公司",
         "order": 1
@@ -129,7 +129,7 @@
         "id": 3,
         "name": "contact",
         "parent": 1,
-        "banner": "",
+        "banner": [],
         "desc": "联系我们",
         "content": "联系我们",
         "order": 2
@@ -138,7 +138,7 @@
         "id": 4,
         "name": "support",
         "parent": 0,
-        "banner": "",
+        "banner": [],
         "desc": "服务支持",
         "content": "服务支持",
         "order": 2
@@ -147,7 +147,7 @@
         "id": 5,
         "name": "refund",
         "parent": 4,
-        "banner": "",
+        "banner": [],
         "desc": "退款",
         "content": "退款",
         "order": 1
@@ -156,7 +156,7 @@
         "id": 6,
         "name": "faq",
         "parent": 4,
-        "banner": "",
+        "banner": [],
         "desc": "F&Q",
         "content": "F&Q",
         "order": 2
@@ -165,7 +165,7 @@
         "id": 7,
         "name": "feedback",
         "parent": 0,
-        "banner": "",
+        "banner": [],
         "desc": "信息反馈",
         "content": "信息反馈",
         "order": 3
@@ -177,7 +177,7 @@
     "data": [
       {
         "id": 1,
-        "menu": 2,
+        "column": 2,
         "title": "公司介绍",
         "desc": "公司介绍",
         "content": "公司介绍",
@@ -186,7 +186,7 @@
       },
       {
         "id": 2,
-        "menu": 2,
+        "column": 2,
         "title": "联系我们",
         "desc": "联系我们",
         "content": "联系我们",
@@ -195,7 +195,7 @@
       },
       {
         "id": 3,
-        "menu": 2,
+        "column": 2,
         "title": "公司新闻",
         "desc": "公司新闻",
         "content": "公司新闻",
@@ -204,7 +204,7 @@
       },
       {
         "id": 4,
-        "menu": 2,
+        "column": 2,
         "title": "企业文化",
         "desc": "企业文化",
         "content": "企业文化",
@@ -213,7 +213,7 @@
       },
       {
         "id": 5,
-        "menu": 2,
+        "column": 2,
         "title": "品牌介绍",
         "desc": "品牌介绍",
         "content": "品牌介绍",
@@ -228,12 +228,14 @@
       {
         "id": 1,
         "name": "电脑",
-        "desc": "电脑"
+        "desc": "电脑",
+        "order": 0
       },
       {
         "id": 2,
         "name": "运动户外",
-        "desc": "运动户外"
+        "desc": "运动户外",
+        "order": 1
       }
     ]
   },
@@ -303,7 +305,7 @@
         "sku": "red 10.5inch",
         "name": "红色10.5寸IPad保护壳",
         "category": 2,
-        "parent": 2,
+        "parent": 1,
         "attributes": [
           {
             "key": "color",
@@ -328,7 +330,7 @@
         "sku": "white 10.5inch",
         "name": "白色10.5寸IPad保护壳",
         "category": 2,
-        "parent": 2,
+        "parent": 1,
         "attributes": [
           {
             "key": "color",

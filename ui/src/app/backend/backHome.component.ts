@@ -7,9 +7,9 @@ import {LoggerService} from "../utils/logger.service";
 import {FileUploader} from 'ng2-file-upload';
 
 @Component({
-  templateUrl: 'home.component.html'
+  templateUrl: 'backHome.component.html'
 })
-export class HomeComponent {
+export class BackHomeComponent {
 
     // msgs: Message[];
 

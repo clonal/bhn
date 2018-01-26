@@ -20,7 +20,7 @@ trait MenuService {
   def addMenu(data: JsObject): Future[Menu]
   def addMenus(data: JsArray): Future[Seq[Menu]]
   //移除菜单
-  def removeMenu(menu: Int): Future[WriteResult]
+  def removeMenu(menu: Int): Future[Boolean]
 
   //修改菜单
   def updateMenu(menu: Menu): Future[Menu]

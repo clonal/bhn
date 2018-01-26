@@ -19,25 +19,36 @@ trait BaseDAO {
     collection.flatMap(_.update(selector, modifier))
   }
 
-  def update[S, T](selector: S, entity: T, upsert: Boolean = true)(implicit ec: ExecutionContext,
-                                           reader: reactivemongo.bson.BSONDocumentReader[T],
-                                           swriter: reactivemongo.bson.BSONDocumentWriter[S],
-                                           twriter: reactivemongo.bson.BSONDocumentWriter[T]) = {
+  def findAndUpdate[S, T](selector: S, entity: T, upsert: Boolean = true)(implicit ec: ExecutionContext,
+                                                                          reader: reactivemongo.bson.BSONDocumentReader[T],
+                                                                          swriter: reactivemongo.bson.BSONDocumentWriter[S],
+                                                                          twriter: reactivemongo.bson.BSONDocumentWriter[T]) = {
     collection.flatMap(_.findAndUpdate(selector, entity, upsert = upsert).map(_.result[T]))
   }
 
-  def remove(id: Int)(implicit ec: ExecutionContext): Future[WriteResult] = {
-    collection.flatMap(_.remove(BSONDocument("id" -> id)))
+  def remove(selector: BSONDocument)(implicit ec: ExecutionContext): Future[Boolean] = {
+    collection.flatMap(_.remove(selector).map(_.ok))
   }
 
-  def remove[S, T](selector: S)(implicit ec: ExecutionContext,
-                                reader: reactivemongo.bson.BSONDocumentReader[T],
-                                swriter: reactivemongo.bson.BSONDocumentWriter[S],
-                                twriter: reactivemongo.bson.BSONDocumentWriter[T]): Future[Option[T]]  = {
+  def removeById(id: Int)(implicit ec: ExecutionContext): Future[Boolean] = {
+    collection.flatMap(_.remove(BSONDocument("id" -> id)).map(_.ok))
+  }
+
+  def findAndRemove[S, T](selector: S)(implicit ec: ExecutionContext,
+                                       reader: reactivemongo.bson.BSONDocumentReader[T],
+                                       swriter: reactivemongo.bson.BSONDocumentWriter[S],
+                                       twriter: reactivemongo.bson.BSONDocumentWriter[T]): Future[Option[T]]  = {
     collection.flatMap(_.findAndRemove(selector).map(_.result[T]))
   }
 
-  def find[T](id: Int)(implicit  reader: Reader[T], ec: ExecutionContext): Future[Option[T]] = {
+  def find[S, T](selector: S)(implicit ec: ExecutionContext,
+                              reader: reactivemongo.bson.BSONDocumentReader[T],
+                              swriter: reactivemongo.bson.BSONDocumentWriter[S],
+                              twriter: reactivemongo.bson.BSONDocumentWriter[T]): Future[Seq[T]] = {
+    collection.flatMap(_.find(selector).cursor[T]().collect[Seq]())
+  }
+
+  def findOne[T](id: Int)(implicit reader: Reader[T], ec: ExecutionContext): Future[Option[T]] = {
     collection.flatMap(_.find(BSONDocument("id" -> id)).one[T])
   }
 

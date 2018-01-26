@@ -21,8 +21,8 @@ import {FileUploadModule} from 'ng2-file-upload';
 import {CommonModule} from '@angular/common';
 import {ReceiptComponent} from './mws/receipt.component';
 import {MwsService} from './mws/mws.service';
-import {BackendComponent} from './backend.component';
-import {BackendService} from './backend.service';
+import {BackendComponent} from './backend/backend.component';
+import {BackendService} from './backend/backend.service';
 import {TreeMenuComponent} from './tree-menu.component';
 import {UploadImageComponent} from './upload-image.component';
 import {AboutUsModule} from './aboutUs/aboutUs.module';
@@ -55,7 +55,6 @@ export function jwtOptionsFactory(): any {
             },
             config: { skipWhenExpired: true }
         }),
-        ImageUploadModule.forRoot(),
         AboutUsModule,
         SupportModule,
         ProductModule,

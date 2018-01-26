@@ -20,7 +20,7 @@ class FeedbackServiceImpl @Inject()(feedbackDAO: FeedbackDAO)(implicit ex: Execu
   }
 
   override def findFeedback(id: Int) = {
-    feedbackDAO.find[Feedback](id)
+    feedbackDAO.findOne[Feedback](id)
   }
 
   override def queryFeedbacks() = {

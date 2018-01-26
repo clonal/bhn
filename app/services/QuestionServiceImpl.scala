@@ -15,7 +15,7 @@ class QuestionServiceImpl @Inject()(questionDAO: QuestionDAO )
 
 
   override def findQuestion(id: Int) = {
-    questionDAO.find[Question](id)
+    questionDAO.findOne[Question](id)
   }
 
   override def queryQuestions() = {
@@ -35,11 +35,11 @@ class QuestionServiceImpl @Inject()(questionDAO: QuestionDAO )
   }
 
   override def removeQuestion(id: Int) = {
-    questionDAO.remove(id)
+    questionDAO.removeById(id)
   }
 
   override def updateQuestion(question: Question) = {
-    questionDAO.update(BSONDocument("id" -> question.id), question)
+    questionDAO.findAndUpdate(BSONDocument("id" -> question.id), question)
   }
 
   override def initQuestion(data: JsArray): Unit = {

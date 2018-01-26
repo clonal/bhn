@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Menu} from './model/menu';
-import {LoggerService} from './utils/logger.service';
-import {Banner} from './model/banner';
+import {Menu} from '../model/menu';
+import {LoggerService} from '../utils/logger.service';
+import {Banner} from '../model/banner';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
-import {Article} from './model/article';
-import {Product} from './model/product';
+import {Article} from '../model/article';
+import {Product} from '../model/product';
 
 @Injectable()
 export class BackendService {

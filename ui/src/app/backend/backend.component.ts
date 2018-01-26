@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {LoggerService} from './utils/logger.service';
+import {LoggerService} from '../utils/logger.service';
 import {BackendService} from './backend.service';
-import {Menu} from './model/menu';
-import {Banner} from './model/banner';
+import {Menu} from '../model/menu';
+import {Banner} from '../model/banner';
 
 
 @Component({
-    templateUrl: 'backend.component.html'
+    templateUrl: 'backend/backend.component.html'
 })
 
 export class BackendComponent implements OnInit {

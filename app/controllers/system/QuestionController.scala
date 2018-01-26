@@ -19,7 +19,7 @@ class QuestionController @Inject()(components: ControllerComponents,
   def listQuestions = Action.async{
     implicit request =>
       questionService.queryQuestions().map{ list =>
-        Ok(JsArray(list.map(x => Json.toJson(x))))
+        Ok(Json.toJson(list))
       }
   }
 

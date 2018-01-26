@@ -3,7 +3,7 @@ package dal
 import javax.inject.Inject
 
 import models.Feedback
-import play.api.libs.json.{JsArray, JsObject}
+import play.api.libs.json.{JsArray, JsObject, Json}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.BSONDocument
 
@@ -14,7 +14,8 @@ class FeedBackDAOImpl @Inject()(implicit ec: ExecutionContext,
   override def collection = reactiveMongoApi.database.map(_.collection("feedback"))
 
   override def addFeedback(data: JsObject) = {
-    (data.validate[Feedback] map { case s => save(s)}).get
+    save(data.as[Feedback])
+//    (data.validate[Feedback] map { case s => save(s)}).get
   }
 
   override def addFeedbacks(data: JsArray) = {

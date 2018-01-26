@@ -34,12 +34,12 @@ class MenuServiceImpl @Inject()(dao: MenuDAO)
     dao.addMenus(data)
   }
 
-  override def removeMenu(menu: Int): Future[WriteResult] = {
+  override def removeMenu(menu: Int): Future[Boolean] = {
     //删除子菜单
     findChildrenOfMenu(menu).flatMap { x =>
       val f = Future.sequence((x.map(_.id) :+ menu).map(c =>
         if (c == menu)
-          dao.remove(c)
+          dao.removeById(c)
         else
           removeMenu(c)
       ))
@@ -57,7 +57,7 @@ class MenuServiceImpl @Inject()(dao: MenuDAO)
   }
 
   override def findMenu(menu: Int): Future[Option[Menu]] = {
-    dao.find[Menu](menu)
+    dao.findOne[Menu](menu)
   }
 
   override def findMenuByOrder(parent: Int, order: Int) = {
@@ -87,7 +87,7 @@ class MenuServiceImpl @Inject()(dao: MenuDAO)
     * @return
     */
   override def deleteImage(menu: Int, index: String, path: String) = {
-    dao.find[Menu](menu).flatMap {
+    dao.findOne[Menu](menu).flatMap {
       case Some(m) =>
         m.banner.get(index) foreach { name =>
           val file = new File(path + name)
@@ -108,7 +108,7 @@ class MenuServiceImpl @Inject()(dao: MenuDAO)
     * @return
     */
   override def getImageName(menu: Int, index: String) = {
-    dao.find[Menu](menu).map{
+    dao.findOne[Menu](menu).map{
       case Some(m) => m.banner.get(index)
       case None => None
     }
@@ -116,7 +116,7 @@ class MenuServiceImpl @Inject()(dao: MenuDAO)
 
 
   override def addImages(menu: Int, imgs: Seq[String]) = {
-    dao.find[Menu](menu).flatMap {
+    dao.findOne[Menu](menu).flatMap {
       case Some(m) =>
         var index = if (m.banner.nonEmpty) m.banner.maxBy(_._1)._1.toInt else 0
         val banner = imgs.foldLeft(m.banner){(m, s) =>
@@ -139,7 +139,7 @@ class MenuServiceImpl @Inject()(dao: MenuDAO)
     * @return
     */
   override def replaceImage(menu: Int, index: String, img: String) = {
-    dao.find[Menu](menu).flatMap {
+    dao.findOne[Menu](menu).flatMap {
       case Some(m) =>
         val newMenu = m.copy(banner = m.banner.updated(index, img))
         dao.update(newMenu).map(_ => Some(newMenu))

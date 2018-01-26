@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Menu} from './model/menu';
-import {BackendService} from './backend.service';
+import {BackendService} from './backend/backend.service';
 import {Router} from '@angular/router';
 
 @Component({

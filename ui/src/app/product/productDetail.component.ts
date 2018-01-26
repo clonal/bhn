@@ -25,8 +25,6 @@ export class ProductDetailComponent implements OnInit, OnChanges {
     constructor(private productService: ProductService,
                 private logger: LoggerService,
                 private route: ActivatedRoute,
-                private router: Router,
-                private sanitizer: DomSanitizer,
                 private fb: FormBuilder) {
         this.createForm();
         this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {

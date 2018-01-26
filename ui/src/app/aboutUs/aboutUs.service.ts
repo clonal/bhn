@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Menu} from '../model/menu';
-import {BackendService} from '../backend.service';
+import {BackendService} from '../backend/backend.service';
 import {FileUploader} from 'ng2-file-upload';
 import {LoggerService} from '../utils/logger.service';
 import {Observable} from 'rxjs/Observable';

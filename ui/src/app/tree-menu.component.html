@@ -1,8 +1,12 @@
 <nav>
     <ul>
         <li *ngFor="let menu of menus">
-            <a routerLink="{{menuURL(menu.id, menu.name)}}" routerLinkActive="active">{{menu.desc}}</a>
-            <!--<a routerLink={{menuRouter(menu.name)}} routerLinkActive="active">{{menu.name}}</a>-->
+            <div *ngIf="menu.name !== '' && menu.parent !== 0; else ablock">
+                <a [routerLink]="'back/' + menu.name" routerLinkActive="active">{{menu.desc}}</a>
+            </div>
+            <ng-template #ablock>
+                <label>{{menu.desc}}</label>
+            </ng-template>
             <app-tree *ngIf="menu.children && menu.children.length"
                       [menus]="menu.children" [prefix]="menuRouter(menu.name)"></app-tree>
         </li>

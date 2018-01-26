@@ -3,7 +3,7 @@ package dal
 import javax.inject.Inject
 
 import models.Product
-import play.api.libs.json.{JsArray, JsObject}
+import play.api.libs.json.{JsArray, JsObject, Json}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.BSONDocument
@@ -21,7 +21,8 @@ class ProductDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi:
 
   override def addProducts(data: JsArray) = {
     val f = for(product <- data.value) yield {
-      save(product.as[Product])
+      val js = product.as[JsObject] ++ Json.obj("children" -> Seq.empty[Product])
+      save(js.as[Product])
     }
     Future.sequence(f)
   }

@@ -112,15 +112,19 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
   }
 
   override def findCategory(category: Int) = {
-    categoryDAO.find[Category](category)
+    categoryDAO.findOne[Category](category)
+  }
+
+  override def findCategoriesByDepartment(department: Int) = {
+    categoryDAO.find[BSONDocument, Category](BSONDocument("department" -> department))
   }
 
   override def findDepartment(department: Int) = {
-    departmentDAO.find[Department](department)
+    departmentDAO.findOne[Department](department)
   }
 
   override def findComment(comment: Int) = {
-    commentDAO.find[Comment](comment)
+    commentDAO.findOne[Comment](comment)
   }
 
   override def findComment(product: Option[Int]) = {
@@ -128,7 +132,7 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
   }
 
   override def findProduct(product: Int) = {
-    productDAO.find[Product](product)
+    productDAO.findOne[Product](product)
   }
 
   override def findProductsByParent(parent: Int) = {
@@ -136,38 +140,59 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
   }
 
   override def removeCategory(category: Int) = {
-    categoryDAO.remove[BSONDocument, Category](BSONDocument("id" -> category)).andThen{
+    categoryDAO.findAndRemove[BSONDocument, Category](BSONDocument("id" -> category)).andThen{
       case Success(x) => x.foreach(c => categories -= c.id)
     }
   }
 
   override def removeDepartment(department: Int) = {
-    departmentDAO.remove[BSONDocument, Department](BSONDocument("id" -> department)).andThen{
+    departmentDAO.findAndRemove[BSONDocument, Department](BSONDocument("id" -> department)).andThen{
       case Success(x) => x.foreach(d => departments -= d.id)
     }
   }
 
   override def removeProduct(product: Int) = {
-    productDAO.remove[BSONDocument, Product](BSONDocument("id" -> product)).andThen{
+    productDAO.findAndRemove[BSONDocument, Product](BSONDocument("id" -> product)).andThen{
       case Success(x) => x.foreach(s => products -= s.id)
     }
   }
 
+  override def removeCategoryByDepartment(department: Int) = {
+    categoryDAO.remove(BSONDocument("department" -> department)).andThen{
+      case Success(true) =>
+        categories.values.filter(_.department == department).foreach{ x =>
+          categories -= x.id
+        }
+    }
+  }
+
   override def updateCategory(selector: BSONDocument, category: Category) = {
-    categoryDAO.update(selector, category).andThen{
+    categoryDAO.findAndUpdate(selector, category).andThen{
       case Success(_) => categories += category.id -> category
     }
   }
 
+  override def saveCategory(category: Category) = {
+    categoryDAO.findAndUpdate(BSONDocument("id" -> category.id), category).andThen{ case Success(_) =>
+      categories += category.id -> category
+    }
+  }
+
   override def updateProduct(selector: BSONDocument, product: Product) = {
-    productDAO.update(selector, product).andThen{
+    productDAO.findAndUpdate(selector, product).andThen{
       case Success(_) => products += product.id -> product
     }
   }
 
   override def updateDepartment(selector: BSONDocument, department: Department) = {
-    departmentDAO.update(selector, department).andThen{
+    departmentDAO.findAndUpdate(selector, department).andThen{
       case Success(_) => departments += department.id -> department
+    }
+  }
+
+  override def saveDepartment(department: Department) = {
+    departmentDAO.findAndUpdate(BSONDocument("id" -> department.id), department).andThen{ case Success(_) =>
+      departments += department.id -> department
     }
   }
 
@@ -208,6 +233,21 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
   }
 
   override def updateOrSaveProduct(product: Product) = {
-    productDAO.update(BSONDocument("id" -> product.id), product)
+    productDAO.findAndUpdate(BSONDocument("id" -> product.id), product)
+  }
+
+  override def getDepartmentOrder() = {
+    if (departments.nonEmpty)
+      departments.values.maxBy(_.order).order + 1
+    else
+      1
+  }
+
+  override def queryTopProducts() = {
+    products.values.filter(_.parent == 0).toSeq
+  }
+
+  override def getProductsByParent(id: Int) = {
+    products.values.filter(_.parent == id).toSeq
   }
 }

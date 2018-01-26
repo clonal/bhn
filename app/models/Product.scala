@@ -8,7 +8,12 @@ import scala.collection.mutable.ArrayBuffer
 
 case class Product(id: Int, name: String, sku: String, category: Int, parent: Int,
                    attributes: Array[Map[String, String]], content: String, price: Double, sellPrice: Double,
-                   asin: String, stock: Int, show: Boolean, images: Map[String, String], link: String)
+                   asin: String, stock: Int, show: Boolean, images: Map[String, String], link: String, var children: Seq[Product]) {
+  def addChildren(children: Seq[Product]) = {
+    this.children = children
+    this
+  }
+}
 
 object Product {
   implicit object ProductReader extends BSONDocumentReader[Product] {
@@ -37,7 +42,7 @@ object Product {
           case b: BSONDocument => b.as[Map[String, String]]
         }
         new Product(id, name, sku, category, parent, attr.toArray,
-          content, price, sellPrice, asin, stock, show, images, link)
+          content, price, sellPrice, asin, stock, show, images, link, Seq.empty)
       }
       opt.get
     }

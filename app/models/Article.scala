@@ -8,7 +8,7 @@ import play.api.libs.json._
 import reactivemongo.bson.{BSONDateTime, BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 case class Article(id: Int,
-                   menu: Int,
+                   column: Int,
                    title: String,
                    desc: String,
                    content: String,
@@ -20,14 +20,14 @@ object Article {
     def read(bson: BSONDocument): Article = {
       val opt: Option[Article] = for {
         id <- bson.getAs[Int]("id")
-        menu <- bson.getAs[Int]("menu")
+        column <- bson.getAs[Int]("column")
         title <- bson.getAs[String]("title")
         desc <- bson.getAs[String]("desc")
         content <- bson.getAs[String]("content")
         order <- bson.getAs[Int]("order")
         date <- bson.getAs[Date]("date")
       } yield {
-        new Article(id, menu, title, desc, content, order, new DateTime(date))
+        new Article(id, column, title, desc, content, order, new DateTime(date))
       }
       opt.get
     }
@@ -36,7 +36,7 @@ object Article {
   implicit object ArticleWriter extends BSONDocumentWriter[Article] {
     def write(article: Article): BSONDocument =
       BSONDocument("id" -> article.id,
-        "menu" -> article.menu,
+        "column" -> article.column,
         "title" -> article.title,
         "desc" -> article.desc,
         "content" -> article.content,

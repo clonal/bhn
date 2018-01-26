@@ -23,7 +23,7 @@ class ArticleDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi:
 /*    collection.flatMap(_.insert(article)).map{ _ =>
       new Article(
         (article \ "id").as[Int],
-        (article \ "menu").as[Int],
+        (article \ "column").as[Int],
         (article \ "title").as[String],
         (article \ "desc").as[String],
         (article \ "content").as[String],
@@ -45,22 +45,22 @@ class ArticleDAOImpl  @Inject()(implicit ec: ExecutionContext, reactiveMongoApi:
 //      BSONDocument("id" -> 1)).sort(BSONDocument("id" -> -1)).one[Int])
 //  }
 
-  override def findByOrder(menu: Int, order: Int) = {
-    collection.flatMap(_.find(BSONDocument("menu" -> menu, "order" -> order)).one[Article])
+  override def findByOrder(column: Int, order: Int) = {
+    collection.flatMap(_.find(BSONDocument("column" -> column, "order" -> order)).one[Article])
   }
 
   override def queryArticles() = {
     collection.flatMap(_.find(BSONDocument()).cursor[Article].collect[List]())
   }
 
-  override def queryArticles(menu: Int, asc: Int) = {
-    collection.flatMap(_.find(BSONDocument("menu" -> menu)).
+  override def queryArticles(column: Int, asc: Int) = {
+    collection.flatMap(_.find(BSONDocument("column" -> column)).
       sort(BSONDocument("id" -> asc)).cursor[Article].collect[List]())
   }
 
   override def update(article: Article) = {
     collection.flatMap(_.update(BSONDocument("id" -> article.id), BSONDocument("$set" ->
-      BSONDocument("menu" -> article.menu, "title" -> article.title, "content" -> article.content,
+      BSONDocument("column" -> article.column, "title" -> article.title, "content" -> article.content,
         "desc" -> article.desc, "order" -> article.order)), upsert = false))
   }
 

@@ -70,9 +70,8 @@ class MenuController  @Inject()(
     menuService.queryMenus().map{ list =>
       val tree = makeTree(list, 0).sortBy(_.order)
       tree.foreach(_.sort())
-      val jsValue = tree.map(x => Json.toJson(x))
-//      Ok(list.foldLeft(JsArray.empty)((acc, x) => acc.append(Json.obj("id" -> x.id, "name" -> x.name))))
-      Ok(JsArray(jsValue))
+//      val jsValue = tree.map(x => Json.toJson(x))
+      Ok(Json.toJson(tree))
     }
   }
 
@@ -92,7 +91,6 @@ class MenuController  @Inject()(
     * @return
     */
   def deleteImage() = Action.async(parse.json) { implicit request =>
-
     val menu = (request.body \ "menu").as[Int]
     val index = (request.body \ "index").as[String]
     menuService.deleteImage(menu, index, IMG_PATH + File.separator).map{result =>

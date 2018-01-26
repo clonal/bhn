@@ -4,11 +4,10 @@ import {RouterModule, Routes} from '@angular/router';
 import {SecuredGuard} from './auth/secured-guard.service';
 import {LoginComponent} from './login/login.component';
 import {PageNotFoundComponent} from './utils/page-not-found.component';
-import {IndexComponent} from './index.component';
 import {SignUpComponent} from './login/signUp.component';
 import {ActivateAccountComponent} from './login/activateAccount.component';
 import {ReceiptComponent} from './mws/receipt.component';
-import {BackendComponent} from './backend.component';
+import {BackendComponent} from './backend/backend.component';
 import {UploadImageComponent} from './upload-image.component';
 
 const appRoutes: Routes = [

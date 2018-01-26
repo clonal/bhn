@@ -5,7 +5,7 @@ import java.nio.file.{Files, Path, Paths, StandardCopyOption}
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
-import models.{Category, Department, Product}
+import models.{Category, Department, Product, TreeNode}
 import org.joda.time.DateTime
 import play.api.Configuration
 import play.api.i18n.I18nSupport
@@ -24,13 +24,15 @@ class ProductController @Inject()(
                                 ) (implicit ec: ExecutionContext)extends AbstractController(components) with I18nSupport  {
 
 //  final val IMG_PATH = System.getProperty("user.dir") + config.underlying.getString("play.assets.path") + File.separator + "images"
-  final val IMAGE_PREFIX = "images"
+  final val IMAGE_PREFIX = "img"
   final val IMG_DIR_PREFIX = "product_"
   final val TEMP_IMG_DIR_PREFIX = "temp_"
-  final val ASSETS_BASIC = config.underlying.getString("play.assets.path").tail
+//  final val ASSETS_BASIC = config.underlying.getString("play.assets.path").tail
+  final val ASSETS_BASIC = Paths.get(System.getProperty("user.dir")).getRoot.resolve(config.underlying.getString("play.assets.imgPath")).toString
   final val IMG_PATH = Paths.get( ASSETS_BASIC + File.separator + IMAGE_PREFIX)
   final val TEMP_IMG_PATH_NEW = Paths.get(IMAGE_PREFIX + File.separator +"temp_product")
 
+//  Paths.get(System.getProperty("user.dir")).getRoot.resolve("demo\\shop-demo")
 
   def productImgDirectory(id: Int) = {
     Paths.get(IMAGE_PREFIX + File.separator + IMG_DIR_PREFIX + id)
@@ -136,7 +138,7 @@ class ProductController @Inject()(
   //删除产品
   def removeProduct(product: Int) = Action.async {
     implicit request =>
-      productService.removeProduct(product).map { case Some(s) =>
+      productService.removeProduct(product).map { case Some(_) =>
         Ok(Json.obj("info" -> "delete completed!"))
       }
   }
@@ -160,7 +162,7 @@ class ProductController @Inject()(
             case None => BadRequest(Json.obj("error" -> "wrong product"))
           }
         case _ =>
-          Future(Ok(Json.obj("info" -> "empty")))
+          Future(Ok(Json.obj("error" -> "empty")))
       }
 
   }
@@ -178,6 +180,14 @@ class ProductController @Inject()(
         Ok(JsArray(list.map(x => Json.toJson(x))))
       }
   }
+
+  def queryTopProducts() = Action {
+    val list = productService.queryTopProducts().map { p =>
+      p.addChildren(productService.getProductsByParent(p.id))
+    }
+    Ok(Json.toJson(list))
+  }
+
   // 添加产品类型
   def addCategory() = Action.async(parse.json) {
     implicit request =>
@@ -191,6 +201,16 @@ class ProductController @Inject()(
       val id = productService.DEPARTMENT_AUTO_ID.incrementAndGet()
       val jsObject = request.body.as[JsObject] ++ Json.obj("id" -> id)
       productService.addDepartment(jsObject.as[Department]).map(m => Ok(Json.toJsObject(m)))
+  }
+
+  def removeDepartment(department: Int) = Action.async {
+    implicit request =>
+      productService.removeDepartment(department).flatMap {
+        case Some(c) =>
+          productService.removeCategoryByDepartment(c.id).map{ case true =>
+            Ok(Json.obj("info" -> s"delete ${c.name} complete"))
+          }
+      }
   }
 
   def updateProductPic(index: Option[Int], pid: Option[Int]) = Action.async(parse.multipartFormData) {
@@ -234,6 +254,32 @@ class ProductController @Inject()(
       }
   }
 
+  def saveCategory() = Action.async(parse.json) {
+    implicit request =>
+      var json = request.body.as[JsObject]
+      if (json("id").as[Int] == 0) {
+        json ++= Json.obj("id" -> productService.CATEGORY_AUTO_ID.incrementAndGet())
+//        json ++= Json.obj("order" -> columnService.getOrder(json("parent").as[Int]))
+      }
+      val category = json.as[Category]
+      productService.saveCategory(category).map { case Some(c) =>
+        Ok(Json.obj("info" -> "add category success!"))
+      }
+  }
+
+  def saveDepartment() = Action.async(parse.json) {
+    implicit request =>
+      var json = request.body.as[JsObject]
+      if (json("id").as[Int] == 0) {
+        json ++= Json.obj("id" -> productService.DEPARTMENT_AUTO_ID.incrementAndGet())
+        json ++= Json.obj("order" -> productService.getDepartmentOrder())
+      }
+      val department = json.as[Department]
+      productService.saveDepartment(department).map { case _ =>
+        Ok(Json.obj("info" -> "add department success!"))
+      }
+  }
+
   def addCategoryBanner(category: Option[Int]) = Action.async(parse.multipartFormData) {
     implicit request =>
       try {
@@ -264,9 +310,19 @@ class ProductController @Inject()(
 
   def listDepartments() = Action.async {
     implicit request =>
-      productService.queryDepartments().map{ list =>
-        Ok(JsArray(list.map(x => Json.toJsObject(x))))
+      productService.queryDepartments().flatMap{ list =>
+        makeDepartmentNodes(list).map(x => Ok(Json.toJson(x)))
       }
+  }
+
+  def makeDepartmentNodes(list: Seq[Department]) = {
+    val futures = list.map{ department =>
+      productService.findCategoriesByDepartment(department.id).map { categories =>
+        val children = categories.map(x => TreeNode(x.id, x.name, 0, x.desc, Seq.empty))
+        TreeNode(department.id, department.name, department.order, department.desc, children)
+      }
+    }
+    Future.sequence(futures)
   }
 
   def listTopCategories() = Action.async {
@@ -286,7 +342,7 @@ class ProductController @Inject()(
             case None => BadRequest(Json.obj("error" -> "wrong menu"))
           }
         case None =>
-          Future(Ok(Json.obj("info" -> "empty")))
+          Future(Ok(Json.obj("error" -> "empty")))
       }
   }
 
@@ -300,7 +356,7 @@ class ProductController @Inject()(
             case None => BadRequest(Json.obj("error" -> "wrong department"))
           }
         case None =>
-          Future(Ok(Json.obj("info" -> "empty")))
+          Future(Ok(Json.obj("error" -> "empty")))
       }
   }
   //评论列表
