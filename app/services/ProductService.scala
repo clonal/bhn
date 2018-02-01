@@ -9,9 +9,6 @@ import reactivemongo.bson.BSONDocument
 import scala.concurrent.Future
 
 trait ProductService {
-
-
-
   val CATEGORY_AUTO_ID = new AtomicInteger()
   val PRODUCT_AUTO_ID = new AtomicInteger()
   val DEPARTMENT_AUTO_ID = new AtomicInteger()
@@ -45,6 +42,7 @@ trait ProductService {
   def removeDepartment(department: Int): Future[Option[Department]]
   def removeCategory(category: Int): Future[Option[Category]]
   def removeProduct(product: Int): Future[Option[Product]]
+  def removeProductWithChildren(product: Int): Future[Boolean]
   def removeCategoryByDepartment(department: Int): Future[Boolean]
 
   def saveCategory(category: Category): Future[Option[Category]]

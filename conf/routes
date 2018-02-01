@@ -83,7 +83,7 @@ POST    /api/product/addProduct                           controllers.product.Pr
 + nocsrf
 POST    /api/product/editProduct                          controllers.product.ProductController.editProduct
 + nocsrf`
-POST    /api/product/removeProduct/:product               controllers.product.ProductController.removeProduct(product: Int)
+POST    /api/product/removeProduct/:product               controllers.product.ProductController.removeProduct(product: Int, p: Option[Boolean])
 GET     /api/product/listDepartments                      controllers.product.ProductController.listDepartments
 GET     /api/product/findDepartment                       controllers.product.ProductController.findDepartment(department: Option[Int])
 + nocsrf

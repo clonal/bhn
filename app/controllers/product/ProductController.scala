@@ -75,6 +75,19 @@ class ProductController @Inject()(
     }
   }
 
+  def copyParentPic(image: String, id: Int, parent: Int, index: String, dir: Path) = {
+    if (!image.equals("")) {
+      val formatName = formatImageName(image, id, index)
+      val path = dir.toString + File.separator + formatName
+      Files.copy(Paths.get(ASSETS_BASIC + File.separator + image),
+        Paths.get(ASSETS_BASIC + File.separator + path),
+        StandardCopyOption.REPLACE_EXISTING)
+      path
+    } else {
+      image
+    }
+  }
+
   def removePicInDir(dir: Path, prefix: String) = {
     val it = Files.newDirectoryStream(Paths.get(ASSETS_BASIC + File.separator + dir.toString)).iterator()
     while(it.hasNext) {
@@ -105,41 +118,66 @@ class ProductController @Inject()(
        mkDir(dir)
          //更改temp为正式的图片名,正式图片命名规则为product_id_index.后缀
         try {
-          val images = product.images map { case(index, image) =>
-            if (image == "") {
-              removePicInDir(dir, formatImagePrefix(id, index))
-              (index, image)
-            } else {
-              val formatName = if (product.id != 0) {
-                val imagePath = Paths.get(ASSETS_BASIC + File.separator + image).getParent
-                val lastName = if (imagePath == null) "" else imagePath.getFileName.toString
-                if (lastName == "temp_product" || lastName == "temp") {
-                  moveTempPic(image, id, index, dir)
-                } else {
-                  image
-                }
-              } else {
-                moveTempPic(image, id, index, dir)
-              }
-              (index, formatName)
-            }
-
-          }
+          val images = handleImages(product, id, dir)
           productService.updateOrSaveProduct(product.copy(id = id, images = images)).flatMap{ s =>
-            Future(Ok(Json.obj("ok" -> "ok")))
+            if (product.id == 0 && product.parent == 0) {
+              initAddProduct(product, id, images).map(_ => Ok(Json.obj("ok" -> "ok")))
+            } else {
+              Future(Ok(Json.obj("ok" -> "ok")))
+            }
           }
         } catch {
           case e: IOException =>
             e.printStackTrace()
             Future.successful(BadRequest(Json.obj("error" -> "upload error")))
         }
-
   }
+
+  def handleImages(product: Product, id: Int, dir: Path) = {
+    product.images map { case(index, image) =>
+      if (image == "") {
+        removePicInDir(dir, formatImagePrefix(id, index))
+        (index, image)
+      } else {
+        val formatName = if (product.id != 0) {
+          val imagePath = Paths.get(ASSETS_BASIC + File.separator + image).getParent
+          val lastName = if (imagePath == null) "" else imagePath.getFileName.toString
+          if (lastName == "temp_product" || lastName == "temp") {
+            moveTempPic(image, id, index, dir)
+          } else {
+            image
+          }
+        } else {
+          moveTempPic(image, id, index, dir)
+        }
+        (index, formatName)
+      }
+    }
+  }
+
+  def initAddProduct(product: Product, parent: Int, images: Map[String, String]) = {
+    val id = productService.PRODUCT_AUTO_ID.incrementAndGet()
+    val dir = productImgDirectory(id)
+    mkDir(dir)
+    val copies = images map { case (index, image) =>
+      val formatName = copyParentPic(image, id, parent, index, dir)
+      (index, formatName)
+    }
+    productService.updateOrSaveProduct(product.copy(id = id, parent = parent, images = copies))
+  }
+
   //删除产品
-  def removeProduct(product: Int) = Action.async {
+  def removeProduct(product: Int, p: Option[Boolean]) = Action.async {
     implicit request =>
-      productService.removeProduct(product).map { case Some(_) =>
-        Ok(Json.obj("info" -> "delete completed!"))
+      val flag = p.getOrElse(false)
+      if (flag) {
+        productService.removeProductWithChildren(product).map {case true =>
+          Ok(Json.obj("info" -> "delete completed!"))
+        }
+      } else {
+        productService.removeProduct(product).map { case Some(_) =>
+          Ok(Json.obj("info" -> "delete completed!"))
+        }
       }
   }
 
@@ -363,14 +401,14 @@ class ProductController @Inject()(
   def listComments() = Action.async {
     implicit request =>
       productService.queryComments().map{ list =>
-        Ok(list.foldLeft(JsObject.empty)((acc, x) => acc ++ Json.obj(x.id.toString -> x.title)))
+        Ok(Json.toJson(list))
       }
   }
   //查找评论
   def commentDetail(comment: Int) = Action.async {
     implicit request =>
       productService.findComment(comment).map{
-        case Some(c) => Ok(Json.toJsObject(c))
+        case Some(c) => Ok(Json.obj("comment" -> c))
         case None => BadRequest(Json.obj("error" -> "wrong menu"))
       }
   }

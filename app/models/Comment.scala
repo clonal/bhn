@@ -5,7 +5,7 @@ import org.joda.time.format.DateTimeFormat
 import play.api.libs.json._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
-case class Comment(id: Int, product: Int, author: Int,
+case class Comment(id: Int, product: Int, author: String,
                    title: String, content: String, star: Double, date: DateTime)
 
 object Comment {
@@ -15,7 +15,7 @@ object Comment {
       val opt: Option[Comment] = for {
         id <- bson.getAs[Int]("id")
         product <- bson.getAs[Int]("product")
-        author <- bson.getAs[Int]("author")
+        author <- bson.getAs[String]("author")
         title <- bson.getAs[String]("title")
         content <- bson.getAs[String]("content")
         star <- bson.getAs[Double]("star")

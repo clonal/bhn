@@ -18,7 +18,7 @@ class FeedbackController @Inject()(components: ControllerComponents,
   def listFeedbacks = Action.async {
     implicit request =>
       feedbackService.queryFeedbacks().map{ list =>
-        Ok(JsArray(list.map(x => Json.toJson(x))))
+        Ok(Json.toJson(list))
       }
   }
 

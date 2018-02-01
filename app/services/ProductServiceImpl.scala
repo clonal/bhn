@@ -5,7 +5,8 @@ import javax.inject.{Inject, Singleton}
 import dal.{CategoryDAO, CommentDAO, DepartmentDAO, ProductDAO}
 import models.{Category, Comment, Department, Product}
 import play.api.libs.json.JsArray
-import reactivemongo.bson.BSONDocument
+import reactivemongo.api.commands.bson.BSONAggregationFramework
+import reactivemongo.bson.{BSONArray, BSONDocument}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
@@ -157,6 +158,16 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
     }
   }
 
+  override def removeProductWithChildren(product: Int) = {
+    productDAO.remove(BSONDocument("$or" -> BSONArray(BSONDocument("id" -> product),
+      BSONDocument("parent" -> product)))).andThen{
+      case Success(x) => products.values.foreach { x =>
+        if (x.parent == product || x.id == product)
+          products -= x.id
+      }
+    }
+  }
+
   override def removeCategoryByDepartment(department: Int) = {
     categoryDAO.remove(BSONDocument("department" -> department)).andThen{
       case Success(true) =>
@@ -233,7 +244,9 @@ class ProductServiceImpl  @Inject()(commentDAO: CommentDAO,
   }
 
   override def updateOrSaveProduct(product: Product) = {
-    productDAO.findAndUpdate(BSONDocument("id" -> product.id), product)
+    productDAO.findAndUpdate(BSONDocument("id" -> product.id), product).andThen{ case _ =>
+      products += product.id -> product
+    }
   }
 
   override def getDepartmentOrder() = {
