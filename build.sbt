@@ -30,7 +30,6 @@ scalacOptions in ThisBuild ++= Seq(
     "-Ywarn-dead-code"
 )
 
-
 libraryDependencies ++= Seq(
     jdbc,
     ehcache,
@@ -56,7 +55,7 @@ libraryDependencies ++= Seq(
     "com.typesafe.play" %% "play-mailer-guice" % "6.0.1",
     // testing
     specs2 % Test,
-    "org.specs2" % "specs2-matcher-extra_2.12" % "3.8.9" % "test"
+    "org.specs2" % "specs2-matcher-extra_2.12" % "3.8.9" % "test",
     //"org.specs2" %% "specs2-core" % "4.0.0" % "test",
 //    "org.specs2" % "specs2-matcher-extra_2.12" % "4.0.0" % "test",
 //    "org.specs2" % "specs2-mock_2.11" % "4.0.0" % "test",
@@ -68,6 +67,9 @@ libraryDependencies ++= Seq(
 //    "com.github.karelcemus" %% "play-redis" % "1.6.0"
 
 //        "org.abstractj.kalium" % "kalium" % "0.7.0"
+    //crawler
+    "net.ruippeixotog" %% "scala-scraper" % "2.1.0"
+
 )
 
 // Repositories
@@ -89,7 +91,7 @@ routesGenerator := InjectedRoutesGenerator
 import play.sbt.routes.RoutesKeys
 import sbt.Resolver
 
-RoutesKeys.routesImport += "play.modules.reactivemongo.PathBindables._"
+/*RoutesKeys.routesImport += "play.modules.reactivemongo.PathBindables._"
 //
 // UI Build Scripts
 //
@@ -146,4 +148,4 @@ dist := (dist dependsOn `ui-prod-build`).value
 
 stage := (stage dependsOn `ui-prod-build`).value
 
-test := ((test in Test) dependsOn `ui-test`).value
+test := ((test in Test) dependsOn `ui-test`).value*/
